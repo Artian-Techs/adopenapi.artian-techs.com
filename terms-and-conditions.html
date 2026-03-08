@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AdopenAPI — Terms and Conditions</title>
+    <meta name="description" content="Terms and Conditions for AdopenAPI — the zero-config OpenAPI 3.1.0 library for AdonisJS." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #06080f;
+        --bg-2: #090c16;
+        --bg-3: #0e1525;
+        --surface: #111827;
+        --surface-2: #1a2236;
+        --border: rgba(99, 120, 180, 0.12);
+        --border-2: rgba(99, 120, 180, 0.22);
+        --primary: #5b6ef5;
+        --primary-2: #818cf8;
+        --glow: rgba(91, 110, 245, 0.35);
+        --cyan: #22d3ee;
+        --cyan-dim: rgba(34, 211, 238, 0.15);
+        --green: #34d399;
+        --orange: #fbbf24;
+        --red: #f87171;
+        --text: #eef2ff;
+        --text-2: #94a3b8;
+        --text-3: #4a5568;
+        --ff-head: "Bricolage Grotesque", sans-serif;
+        --ff-display: "Fraunces", serif;
+        --ff-body: "DM Sans", sans-serif;
+        --ff-mono: "JetBrains Mono", monospace;
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 88px;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--ff-body);
+        font-size: 16px;
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+      }
+
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: var(--bg); }
+      ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+      /* ─── NOISE TEXTURE ─── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0.5;
+      }
+
+      /* ─── BACKGROUND ORBS ─── */
+      .bg-orb {
+        position: fixed;
+        border-radius: 50%;
+        filter: blur(110px);
+        pointer-events: none;
+        z-index: 0;
+        opacity: 0;
+        animation: orb-in 1.2s ease forwards;
+      }
+      .bg-orb-1 {
+        width: 700px;
+        height: 700px;
+        background: radial-gradient(circle, rgba(91, 110, 245, 0.18) 0%, transparent 70%);
+        top: -250px;
+        left: -200px;
+        animation-delay: 0s;
+      }
+      .bg-orb-2 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(34, 211, 238, 0.08) 0%, transparent 70%);
+        bottom: -100px;
+        right: -100px;
+        animation-delay: 0.2s;
+      }
+      @keyframes orb-in { to { opacity: 1; } }
+
+      /* ─── HEADER ─── */
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border-bottom: 1px solid var(--border);
+        background: rgba(6, 8, 15, 0.8);
+        backdrop-filter: blur(16px);
+      }
+      .header-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 32px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--ff-head);
+        font-weight: 700;
+        font-size: 17px;
+        color: var(--text);
+        text-decoration: none;
+        letter-spacing: -0.02em;
+      }
+      .brand-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 7px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--cyan) 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--ff-mono);
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+        box-shadow: 0 0 14px var(--glow);
+        flex-shrink: 0;
+      }
+      .back-link {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--text-3);
+        text-decoration: none;
+        transition: color 0.2s;
+        font-family: var(--ff-body);
+      }
+      .back-link:hover { color: var(--text-2); }
+
+      /* ─── PAGE HERO ─── */
+      .page-hero {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 64px 32px 48px;
+        border-bottom: 1px solid var(--border);
+      }
+      .hero-eyebrow {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--primary-2);
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .hero-eyebrow::before {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 1px;
+        background: var(--primary-2);
+      }
+      .page-hero h1 {
+        font-family: var(--ff-head);
+        font-size: clamp(32px, 5vw, 52px);
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        line-height: 1.1;
+        margin-bottom: 16px;
+      }
+      .page-hero h1 em {
+        font-family: var(--ff-display);
+        font-style: italic;
+        font-weight: 400;
+        background: linear-gradient(90deg, var(--primary-2), var(--cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-meta {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+      .hero-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 13px;
+        color: var(--text-3);
+        font-family: var(--ff-mono);
+      }
+      .hero-meta-item svg {
+        color: var(--text-3);
+        flex-shrink: 0;
+      }
+
+      /* ─── LAYOUT ─── */
+      .page-body {
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 56px 32px 96px;
+        display: grid;
+        grid-template-columns: 240px 1fr;
+        gap: 64px;
+        align-items: start;
+      }
+
+      /* ─── SIDEBAR TOC ─── */
+      .toc {
+        position: sticky;
+        top: 88px;
+      }
+      .toc-label {
+        font-family: var(--ff-mono);
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--text-3);
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .toc-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+      .toc-list a {
+        display: block;
+        padding: 6px 10px;
+        font-size: 12.5px;
+        color: var(--text-3);
+        text-decoration: none;
+        border-radius: 6px;
+        transition: color 0.2s, background 0.2s;
+        line-height: 1.4;
+        font-family: var(--ff-body);
+      }
+      .toc-list a:hover {
+        color: var(--text-2);
+        background: rgba(99, 120, 180, 0.06);
+      }
+      .toc-list a.active {
+        color: var(--primary-2);
+        background: rgba(91, 110, 245, 0.08);
+      }
+      .toc-list .toc-num {
+        font-family: var(--ff-mono);
+        font-size: 10px;
+        color: var(--text-3);
+        margin-right: 6px;
+        opacity: 0.6;
+      }
+
+      /* ─── CONTENT ─── */
+      .content {
+        min-width: 0;
+      }
+
+      .section {
+        padding-bottom: 56px;
+        margin-bottom: 56px;
+        border-bottom: 1px solid var(--border);
+        opacity: 0;
+        transform: translateY(12px);
+        animation: section-in 0.5s ease forwards;
+      }
+      .section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      @keyframes section-in {
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      .section:nth-child(1)  { animation-delay: 0.05s; }
+      .section:nth-child(2)  { animation-delay: 0.10s; }
+      .section:nth-child(3)  { animation-delay: 0.15s; }
+      .section:nth-child(4)  { animation-delay: 0.20s; }
+      .section:nth-child(5)  { animation-delay: 0.25s; }
+      .section:nth-child(6)  { animation-delay: 0.30s; }
+      .section:nth-child(7)  { animation-delay: 0.35s; }
+      .section:nth-child(8)  { animation-delay: 0.40s; }
+      .section:nth-child(9)  { animation-delay: 0.45s; }
+      .section:nth-child(10) { animation-delay: 0.50s; }
+      .section:nth-child(11) { animation-delay: 0.55s; }
+      .section:nth-child(12) { animation-delay: 0.60s; }
+      .section:nth-child(13) { animation-delay: 0.65s; }
+
+      .section-header {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+      .section-num {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        color: var(--primary-2);
+        opacity: 0.7;
+        flex-shrink: 0;
+        padding-top: 2px;
+      }
+      .section h2 {
+        font-family: var(--ff-head);
+        font-size: clamp(18px, 2.2vw, 22px);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+        color: var(--text);
+      }
+
+      .section p {
+        font-size: 15px;
+        color: var(--text-2);
+        line-height: 1.8;
+        font-weight: 300;
+        margin-bottom: 16px;
+      }
+      .section p:last-child { margin-bottom: 0; }
+
+      .section ul,
+      .section ol {
+        padding-left: 0;
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .section ul li,
+      .section ol li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 15px;
+        color: var(--text-2);
+        line-height: 1.7;
+        font-weight: 300;
+      }
+      .section ul li::before {
+        content: "—";
+        color: var(--primary-2);
+        font-family: var(--ff-mono);
+        font-size: 12px;
+        flex-shrink: 0;
+        margin-top: 3px;
+        opacity: 0.6;
+      }
+      .section ol { counter-reset: ol-counter; }
+      .section ol li { counter-increment: ol-counter; }
+      .section ol li::before {
+        content: counter(ol-counter, decimal-leading-zero);
+        color: var(--primary-2);
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        flex-shrink: 0;
+        margin-top: 4px;
+        opacity: 0.6;
+      }
+
+      /* ─── CALLOUT BOXES ─── */
+      .callout {
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin: 24px 0;
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 300;
+      }
+      .callout-icon {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        margin-top: 1px;
+      }
+      .callout.green {
+        background: rgba(52, 211, 153, 0.06);
+        border: 1px solid rgba(52, 211, 153, 0.18);
+        color: var(--text-2);
+      }
+      .callout.green .callout-icon {
+        background: rgba(52, 211, 153, 0.12);
+        border: 1px solid rgba(52, 211, 153, 0.2);
+        color: var(--green);
+      }
+      .callout.blue {
+        background: rgba(91, 110, 245, 0.06);
+        border: 1px solid rgba(91, 110, 245, 0.18);
+        color: var(--text-2);
+      }
+      .callout.blue .callout-icon {
+        background: rgba(91, 110, 245, 0.12);
+        border: 1px solid rgba(91, 110, 245, 0.2);
+        color: var(--primary-2);
+      }
+      .callout.orange {
+        background: rgba(251, 191, 36, 0.05);
+        border: 1px solid rgba(251, 191, 36, 0.15);
+        color: var(--text-2);
+      }
+      .callout.orange .callout-icon {
+        background: rgba(251, 191, 36, 0.10);
+        border: 1px solid rgba(251, 191, 36, 0.18);
+        color: var(--orange);
+      }
+      .callout strong {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .callout-body { flex: 1; }
+
+      /* ─── INLINE CODE ─── */
+      code {
+        font-family: var(--ff-mono);
+        font-size: 0.85em;
+        background: rgba(99, 120, 180, 0.1);
+        border: 1px solid var(--border-2);
+        border-radius: 4px;
+        padding: 1px 6px;
+        color: var(--cyan);
+      }
+
+      /* ─── HIGHLIGHT PILL ─── */
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        font-weight: 500;
+        padding: 3px 10px;
+        border-radius: 20px;
+        letter-spacing: 0.04em;
+      }
+      .pill.primary {
+        background: rgba(91, 110, 245, 0.12);
+        border: 1px solid rgba(91, 110, 245, 0.25);
+        color: var(--primary-2);
+      }
+      .pill.green {
+        background: rgba(52, 211, 153, 0.1);
+        border: 1px solid rgba(52, 211, 153, 0.22);
+        color: var(--green);
+      }
+
+      /* ─── CONTACT CARD ─── */
+      .contact-card {
+        background: var(--bg-3);
+        border: 1px solid var(--border-2);
+        border-radius: 16px;
+        padding: 28px 32px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+        flex-wrap: wrap;
+        margin-top: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+      .contact-card::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--primary), var(--cyan), transparent);
+      }
+      .contact-card-info strong {
+        display: block;
+        font-family: var(--ff-head);
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        color: var(--text);
+      }
+      .contact-card-info span {
+        font-size: 13px;
+        color: var(--text-3);
+      }
+      .contact-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        background: rgba(91, 110, 245, 0.1);
+        border: 1px solid rgba(91, 110, 245, 0.25);
+        color: var(--primary-2);
+        font-size: 13.5px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s;
+        font-family: var(--ff-body);
+        white-space: nowrap;
+      }
+      .contact-link:hover {
+        background: rgba(91, 110, 245, 0.18);
+        border-color: rgba(91, 110, 245, 0.4);
+        transform: translateY(-1px);
+      }
+
+      /* ─── FOOTER ─── */
+      footer {
+        position: relative;
+        z-index: 1;
+        border-top: 1px solid var(--border);
+        padding: 28px 32px;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+      }
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--ff-head);
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-3);
+        text-decoration: none;
+        letter-spacing: -0.01em;
+      }
+      .footer-copy {
+        font-size: 12px;
+        color: var(--text-3);
+        font-family: var(--ff-mono);
+      }
+      .footer-links {
+        display: flex;
+        gap: 20px;
+      }
+      .footer-links a {
+        font-size: 12px;
+        color: var(--text-3);
+        text-decoration: none;
+        transition: color 0.2s;
+        font-family: var(--ff-body);
+      }
+      .footer-links a:hover { color: var(--text-2); }
+      .footer-links a.active { color: var(--primary-2); }
+
+      /* ─── MOBILE TOC ─── */
+      .mobile-toc {
+        display: none;
+        position: relative;
+        z-index: 1;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 24px 20px 0;
+      }
+      .mobile-toc-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--bg-3);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 12px 16px;
+        cursor: pointer;
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-2);
+      }
+      .mobile-toc-toggle svg {
+        transition: transform 0.2s;
+      }
+      .mobile-toc-toggle.open svg {
+        transform: rotate(180deg);
+      }
+      .mobile-toc-menu {
+        display: none;
+        background: var(--bg-3);
+        border: 1px solid var(--border);
+        border-top: none;
+        border-radius: 0 0 10px 10px;
+        padding: 8px 0 12px;
+      }
+      .mobile-toc-menu.open { display: block; }
+      .mobile-toc-menu a {
+        display: block;
+        padding: 8px 16px;
+        font-size: 13px;
+        color: var(--text-3);
+        text-decoration: none;
+        transition: color 0.15s;
+      }
+      .mobile-toc-menu a:hover { color: var(--text-2); }
+
+      /* ─── RESPONSIVE ─── */
+      @media (max-width: 900px) {
+        .page-body {
+          grid-template-columns: 1fr;
+          gap: 0;
+          padding: 32px 20px 64px;
+        }
+        .toc {
+          display: none;
+        }
+        .mobile-toc {
+          display: block;
+        }
+        .page-hero {
+          padding: 40px 20px 36px;
+        }
+        .header-inner {
+          padding: 0 20px;
+        }
+        footer {
+          padding: 24px 20px;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+
+    <!-- HEADER -->
+    <header>
+      <div class="header-inner">
+        <a href="index.html" class="brand">
+          <span class="brand-icon">A↗</span>
+          AdopenAPI
+        </a>
+        <a href="index.html" class="back-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12" />
+            <polyline points="12 19 5 12 12 5" />
+          </svg>
+          Back to home
+        </a>
+      </div>
+    </header>
+
+    <!-- PAGE HERO -->
+    <div class="page-hero">
+      <p class="hero-eyebrow">Legal</p>
+      <h1>Terms and <em>Conditions</em></h1>
+      <div class="hero-meta">
+        <span class="hero-meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
+          </svg>
+          Last updated: March 8, 2026
+        </span>
+        <span class="hero-meta-item">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          AdopenAPI · Artian Technologies
+        </span>
+      </div>
+    </div>
+
+    <!-- MOBILE TOC -->
+    <nav class="mobile-toc" aria-label="Table of contents">
+      <button class="mobile-toc-toggle" id="mobileTocToggle" aria-expanded="false">
+        Table of Contents
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+      <div class="mobile-toc-menu" id="mobileTocMenu">
+        <a href="#introduction">1. Agreement to Terms</a>
+        <a href="#license">2. License Grant</a>
+        <a href="#permitted-use">3. Permitted Use</a>
+        <a href="#restrictions">4. Restrictions</a>
+        <a href="#payment">5. Payment &amp; Pricing</a>
+        <a href="#refund">6. Refund Policy</a>
+        <a href="#ip">7. Intellectual Property</a>
+        <a href="#updates">8. Updates &amp; Support</a>
+        <a href="#warranties">9. Disclaimer of Warranties</a>
+        <a href="#liability">10. Limitation of Liability</a>
+        <a href="#governing-law">11. Governing Law</a>
+        <a href="#changes">12. Changes to Terms</a>
+        <a href="#contact">13. Contact</a>
+      </div>
+    </nav>
+
+    <!-- PAGE BODY -->
+    <div class="page-body">
+
+      <!-- SIDEBAR TOC -->
+      <nav class="toc" aria-label="Table of contents">
+        <p class="toc-label">On this page</p>
+        <ul class="toc-list">
+          <li><a href="#introduction"><span class="toc-num">01</span> Agreement to Terms</a></li>
+          <li><a href="#license"><span class="toc-num">02</span> License Grant</a></li>
+          <li><a href="#permitted-use"><span class="toc-num">03</span> Permitted Use</a></li>
+          <li><a href="#restrictions"><span class="toc-num">04</span> Restrictions</a></li>
+          <li><a href="#payment"><span class="toc-num">05</span> Payment &amp; Pricing</a></li>
+          <li><a href="#refund"><span class="toc-num">06</span> Refund Policy</a></li>
+          <li><a href="#ip"><span class="toc-num">07</span> Intellectual Property</a></li>
+          <li><a href="#updates"><span class="toc-num">08</span> Updates &amp; Support</a></li>
+          <li><a href="#warranties"><span class="toc-num">09</span> Disclaimer of Warranties</a></li>
+          <li><a href="#liability"><span class="toc-num">10</span> Limitation of Liability</a></li>
+          <li><a href="#governing-law"><span class="toc-num">11</span> Governing Law</a></li>
+          <li><a href="#changes"><span class="toc-num">12</span> Changes to Terms</a></li>
+          <li><a href="#contact"><span class="toc-num">13</span> Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- CONTENT -->
+      <div class="content">
+
+        <!-- 1. INTRODUCTION -->
+        <section class="section" id="introduction">
+          <div class="section-header">
+            <span class="section-num">01</span>
+            <h2>Agreement to Terms</h2>
+          </div>
+          <p>These Terms and Conditions ("Terms") govern your purchase and use of AdopenAPI ("the Software"), a commercial software product developed and sold by Artian Technologies ("we", "us", or "our"). By purchasing, downloading, or using the Software, you agree to be bound by these Terms in their entirety.</p>
+          <p>If you do not agree to these Terms, do not purchase or use the Software. These Terms constitute a legally binding agreement between you (the individual or entity purchasing the license, referred to as "Licensee" or "you") and Artian Technologies.</p>
+          <div class="callout blue">
+            <span class="callout-icon">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="12" /><line x1="12" y1="16" x2="12.01" y2="16" />
+              </svg>
+            </span>
+            <div class="callout-body">
+              <strong>Plain language summary:</strong> By buying AdopenAPI, you agree to these Terms. Please read them carefully before completing your purchase.
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. LICENSE GRANT -->
+        <section class="section" id="license">
+          <div class="section-header">
+            <span class="section-num">02</span>
+            <h2>License Grant</h2>
+          </div>
+          <p>Subject to your compliance with these Terms and full payment of the applicable license fee, Artian Technologies grants you a:</p>
+          <ul>
+            <li><strong style="color:var(--text);font-weight:500;">Perpetual</strong> — your license does not expire. You may continue using any version of the Software you obtained under this license indefinitely.</li>
+            <li><strong style="color:var(--text);font-weight:500;">Non-exclusive</strong> — Artian Technologies may grant licenses to other parties. You do not receive any exclusive rights to the Software.</li>
+            <li><strong style="color:var(--text);font-weight:500;">Non-transferable</strong> — the license is personal to you and may not be sold, transferred, gifted, or assigned to any third party.</li>
+            <li><strong style="color:var(--text);font-weight:500;">Single-developer</strong> — the license covers one (1) individual developer. It may not be shared among multiple developers within a team or organization without a separate multi-seat license.</li>
+          </ul>
+          <p>This license grants you the right to use and modify the Software's source code for use in your own projects, subject to the restrictions set out in Section 4.</p>
+        </section>
+
+        <!-- 3. PERMITTED USE -->
+        <section class="section" id="permitted-use">
+          <div class="section-header">
+            <span class="section-num">03</span>
+            <h2>Permitted Use</h2>
+          </div>
+          <p>Under your single-developer license, you are permitted to:</p>
+          <ul>
+            <li>Install and use the Software on any number of personal devices you own or control.</li>
+            <li>Use the Software in an <strong style="color:var(--text);font-weight:500;">unlimited number of projects</strong>, including commercial projects, client work, and SaaS applications.</li>
+            <li>Modify the source code of the Software for your own use within your projects.</li>
+            <li>Deploy applications built with the Software to production environments, including for commercial or paid services.</li>
+            <li>Create derivative integrations and wrappers for use within your own projects, provided they are not sold, licensed, or distributed as a standalone product.</li>
+          </ul>
+          <div class="callout green">
+            <span class="callout-icon">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </span>
+            <div class="callout-body">
+              <strong>One license, unlimited projects.</strong> Build as many AdonisJS applications as you need — personal, commercial, or for clients — all covered under a single license.
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. RESTRICTIONS -->
+        <section class="section" id="restrictions">
+          <div class="section-header">
+            <span class="section-num">04</span>
+            <h2>Restrictions</h2>
+          </div>
+          <p>You may not, under any circumstances:</p>
+          <ul>
+            <li><strong style="color:var(--text);font-weight:500;">Redistribute</strong> the Software or its source code, in original or modified form, to any third party — whether free of charge or for compensation.</li>
+            <li><strong style="color:var(--text);font-weight:500;">Resell</strong> the Software, your license, or access to the Software as a standalone product or service.</li>
+            <li><strong style="color:var(--text);font-weight:500;">Sub-license</strong> the Software or grant any rights under this license to any other person or entity.</li>
+            <li><strong style="color:var(--text);font-weight:500;">Publish or open-source</strong> the Software or substantial portions of its source code, including through public repositories, package registries, or code-sharing platforms.</li>
+            <li><strong style="color:var(--text);font-weight:500;">Share access</strong> to the Software with other developers within a team, organization, or agency without purchasing additional per-developer licenses.</li>
+            <li>Remove, alter, or obscure any copyright, trademark, or proprietary notices contained in the Software.</li>
+            <li>Use the Software in a manner that violates any applicable laws or regulations.</li>
+          </ul>
+          <p>Any violation of these restrictions immediately terminates your license and may result in legal action.</p>
+        </section>
+
+        <!-- 5. PAYMENT & PRICING -->
+        <section class="section" id="payment">
+          <div class="section-header">
+            <span class="section-num">05</span>
+            <h2>Payment &amp; Pricing</h2>
+          </div>
+          <p>AdopenAPI is available under a one-time license fee of <span class="pill primary">€99 EUR</span> per developer seat, paid at the time of purchase. This is a single payment with no recurring subscription, renewal fee, or hidden charges.</p>
+          <p>All payments are processed securely by <strong style="color:var(--text);font-weight:500;">LemonSqueezy</strong>, our Merchant of Record. LemonSqueezy handles payment processing, invoicing, and applicable taxes (including VAT and sales tax) on our behalf. By completing your purchase, you also agree to LemonSqueezy's Terms of Service and Privacy Policy.</p>
+          <ul>
+            <li>Prices are listed in Euros (€ EUR) and may be subject to applicable local taxes at checkout.</li>
+            <li>LemonSqueezy automatically calculates and remits applicable VAT and sales taxes based on your billing location.</li>
+            <li>A VAT invoice or receipt will be emailed to you upon successful purchase.</li>
+            <li>Artian Technologies reserves the right to change the license price at any time. Price changes do not affect licenses already purchased.</li>
+          </ul>
+          <div class="callout orange">
+            <span class="callout-icon">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+            </span>
+            <div class="callout-body">
+              <strong>Team licenses available.</strong> Need licenses for multiple developers? Contact us at <a href="mailto:support@artian-techs.com" style="color:var(--primary-2);text-decoration:none;">support@artian-techs.com</a> for multi-seat pricing.
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. REFUND POLICY -->
+        <section class="section" id="refund">
+          <div class="section-header">
+            <span class="section-num">06</span>
+            <h2>Refund Policy</h2>
+          </div>
+          <p>We stand behind AdopenAPI. If the Software does not work for your project for any reason, we offer a <span class="pill green">14-day money-back guarantee</span> from the date of purchase — no questions asked.</p>
+          <p>To request a refund within the 14-day window:</p>
+          <ol>
+            <li>Email <a href="mailto:support@artian-techs.com" style="color:var(--primary-2);text-decoration:none;">support@artian-techs.com</a> with your order number and a brief description of the issue (optional but helpful).</li>
+            <li>Alternatively, you may initiate a refund directly through LemonSqueezy using your purchase receipt.</li>
+            <li>Refunds are processed by LemonSqueezy and typically appear within 5–10 business days, depending on your payment method and bank.</li>
+          </ol>
+          <p>Refund requests made after the 14-day period will be reviewed on a case-by-case basis at our sole discretion. Upon a confirmed refund, your license is immediately revoked and you must cease all use of the Software.</p>
+        </section>
+
+        <!-- 7. INTELLECTUAL PROPERTY -->
+        <section class="section" id="ip">
+          <div class="section-header">
+            <span class="section-num">07</span>
+            <h2>Intellectual Property</h2>
+          </div>
+          <p>The Software, including all source code, algorithms, documentation, design, and associated intellectual property, is and remains the exclusive property of Artian Technologies. All rights not expressly granted in these Terms are reserved.</p>
+          <p>Your purchase grants you a license to use the Software as described herein — it does not transfer any ownership rights, copyright, or intellectual property in the Software to you.</p>
+          <ul>
+            <li>The <code>AdopenAPI</code> name, logo, and associated branding are trademarks of Artian Technologies and may not be used without prior written permission.</li>
+            <li>Any feedback, suggestions, or improvement ideas you submit may be used by Artian Technologies without obligation or compensation to you.</li>
+            <li>Modifications you make to the Software's source code for use within your projects remain subject to this license. You may not claim independent ownership of the original code or significant portions thereof.</li>
+          </ul>
+        </section>
+
+        <!-- 8. UPDATES & SUPPORT -->
+        <section class="section" id="updates">
+          <div class="section-header">
+            <span class="section-num">08</span>
+            <h2>Updates &amp; Support</h2>
+          </div>
+          <p>Your license includes access to all future versions and updates of AdopenAPI, released during the lifetime of the product, at no additional cost.</p>
+          <ul>
+            <li><strong style="color:var(--text);font-weight:500;">All future updates, forever.</strong> Bug fixes, new features, and version upgrades are included — there are no paid upgrade tiers.</li>
+            <li><strong style="color:var(--text);font-weight:500;">Priority email support</strong> with a response time target of under 24 hours on business days. Reach us at <a href="mailto:support@artian-techs.com" style="color:var(--primary-2);text-decoration:none;">support@artian-techs.com</a>.</li>
+            <li>Updates are delivered via the private repository or package registry associated with your license. Access details will be included in your post-purchase email.</li>
+          </ul>
+          <p>Artian Technologies reserves the right to discontinue development of the Software with reasonable prior notice. In the event of discontinuation, all existing license holders retain perpetual rights to the last released version under the terms of their license.</p>
+          <div class="callout blue">
+            <span class="callout-icon">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </span>
+            <div class="callout-body">
+              <strong>No surprise fees.</strong> The €99 you pay today covers everything — current version, all future updates, and support — for life.
+            </div>
+          </div>
+        </section>
+
+        <!-- 9. DISCLAIMER OF WARRANTIES -->
+        <section class="section" id="warranties">
+          <div class="section-header">
+            <span class="section-num">09</span>
+            <h2>Disclaimer of Warranties</h2>
+          </div>
+          <p>The Software is provided <strong style="color:var(--text);font-weight:500;">"as is"</strong> and <strong style="color:var(--text);font-weight:500;">"as available"</strong>, without warranty of any kind, express or implied. To the fullest extent permitted by applicable law, Artian Technologies disclaims all warranties, including but not limited to:</p>
+          <ul>
+            <li>Implied warranties of merchantability, fitness for a particular purpose, and non-infringement.</li>
+            <li>Any warranty that the Software will be error-free, uninterrupted, or free of bugs or security vulnerabilities.</li>
+            <li>Any warranty regarding the accuracy, completeness, or reliability of the Software's output or generated specifications.</li>
+            <li>Any warranty of compatibility with specific AdonisJS versions, TypeScript configurations, or third-party packages beyond those documented at the time of release.</li>
+          </ul>
+          <p>You assume full responsibility for evaluating the Software's suitability for your intended use and for any results obtained from its use.</p>
+        </section>
+
+        <!-- 10. LIMITATION OF LIABILITY -->
+        <section class="section" id="liability">
+          <div class="section-header">
+            <span class="section-num">10</span>
+            <h2>Limitation of Liability</h2>
+          </div>
+          <p>To the maximum extent permitted by applicable law, in no event shall Artian Technologies, its directors, employees, or contributors be liable for any:</p>
+          <ul>
+            <li>Indirect, incidental, special, consequential, or punitive damages.</li>
+            <li>Loss of profits, revenue, data, business opportunities, or goodwill.</li>
+            <li>Damages arising from your inability to use the Software, service interruptions, or data loss.</li>
+            <li>Damages arising from third-party claims related to your use of the Software.</li>
+          </ul>
+          <p>In all cases, the total aggregate liability of Artian Technologies to you for any claim arising under or related to these Terms shall not exceed the amount you paid for the Software license.</p>
+          <p>Some jurisdictions do not allow certain limitations on implied warranties or liability, so some of the above limitations may not apply to you.</p>
+        </section>
+
+        <!-- 11. GOVERNING LAW -->
+        <section class="section" id="governing-law">
+          <div class="section-header">
+            <span class="section-num">11</span>
+            <h2>Governing Law</h2>
+          </div>
+          <p>These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which Artian Technologies is registered, without regard to its conflict of law principles.</p>
+          <p>Any disputes arising from or related to these Terms or your use of the Software that cannot be resolved informally shall be subject to the exclusive jurisdiction of the courts in that jurisdiction. By using the Software, you consent to such jurisdiction and waive any objections based on venue or inconvenient forum.</p>
+          <p>If any provision of these Terms is found to be unenforceable or invalid, that provision shall be limited or eliminated to the minimum extent necessary, and the remaining provisions shall continue in full force and effect.</p>
+        </section>
+
+        <!-- 12. CHANGES TO TERMS -->
+        <section class="section" id="changes">
+          <div class="section-header">
+            <span class="section-num">12</span>
+            <h2>Changes to Terms</h2>
+          </div>
+          <p>Artian Technologies reserves the right to update or modify these Terms at any time. When we make material changes, we will update the "Last updated" date at the top of this page and, where appropriate, notify active license holders by email.</p>
+          <p>Your continued use of the Software following any changes constitutes your acceptance of the revised Terms. If you do not agree to the updated Terms, you may request a refund within the 14-day window or, if that period has passed, discontinue use of the Software.</p>
+          <p>We recommend reviewing this page periodically to stay informed of any changes.</p>
+        </section>
+
+        <!-- 13. CONTACT -->
+        <section class="section" id="contact">
+          <div class="section-header">
+            <span class="section-num">13</span>
+            <h2>Contact</h2>
+          </div>
+          <p>If you have any questions about these Terms, your license, or require support, please don't hesitate to reach out. We're a small, responsive team and aim to reply within 24 hours on business days.</p>
+          <div class="contact-card">
+            <div class="contact-card-info">
+              <strong>Artian Technologies</strong>
+              <span>Support &amp; licensing inquiries</span>
+            </div>
+            <a href="mailto:support@artian-techs.com" class="contact-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <polyline points="22,6 12,13 2,6" />
+              </svg>
+              support@artian-techs.com
+            </a>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+      <a href="index.html" class="footer-brand">
+        <span class="brand-icon" style="width:22px;height:22px;font-size:9px;">A↗</span>
+        AdopenAPI
+      </a>
+      <span class="footer-copy">© 2026 Artian Technologies. All rights reserved.</span>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="payment.html">Get License</a>
+        <a href="terms-and-conditions.html" class="active">Terms</a>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile TOC toggle
+      const toggle = document.getElementById('mobileTocToggle');
+      const menu = document.getElementById('mobileTocMenu');
+      toggle.addEventListener('click', () => {
+        const open = menu.classList.toggle('open');
+        toggle.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', open);
+      });
+      // Close mobile TOC on link click
+      menu.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          menu.classList.remove('open');
+          toggle.classList.remove('open');
+          toggle.setAttribute('aria-expanded', false);
+        });
+      });
+
+      // Active TOC highlighting
+      const sections = document.querySelectorAll('.section[id]');
+      const tocLinks = document.querySelectorAll('.toc-list a');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            tocLinks.forEach(link => {
+              link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+            });
+          }
+        });
+      }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+
+      sections.forEach(section => observer.observe(section));
+    </script>
+  </body>
+</html>
