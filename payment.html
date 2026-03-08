@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AdopenAPI — Get Lifetime Access</title>
+  <meta name="robots" content="noindex" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Fraunces:opsz,wght@9..144,700;9..144,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!--
+    LemonSqueezy overlay checkout script.
+    This opens the checkout in a beautiful overlay modal without leaving your page.
+    The user is redirected to success.html after purchase.
+  -->
+  <script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #06080F;
+      --bg-2:      #090C16;
+      --bg-3:      #0E1525;
+      --surface:   #111827;
+      --border:    rgba(99, 120, 180, 0.12);
+      --border-2:  rgba(99, 120, 180, 0.22);
+      --primary:   #5B6EF5;
+      --primary-2: #818CF8;
+      --glow:      rgba(91, 110, 245, 0.35);
+      --cyan:      #22D3EE;
+      --green:     #34D399;
+      --orange:    #FBBF24;
+      --text:      #EEF2FF;
+      --text-2:    #94A3B8;
+      --text-3:    #4A5568;
+      --ff-head:   'Bricolage Grotesque', sans-serif;
+      --ff-display:'Fraunces', serif;
+      --ff-body:   'DM Sans', sans-serif;
+      --ff-mono:   'JetBrains Mono', monospace;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0; opacity: 0.5;
+    }
+
+    /* ─── BACKGROUND ORBS ─── */
+    .bg-orb { position: fixed; border-radius: 50%; filter: blur(110px); pointer-events: none; z-index: 0; opacity: 0; animation: orb-in 1.2s ease forwards; }
+    .bg-orb-1 {
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(91,110,245,0.22) 0%, transparent 70%);
+      top: -250px; left: -200px; animation-delay: 0s;
+    }
+    .bg-orb-2 {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(34,211,238,0.1) 0%, transparent 70%);
+      bottom: -100px; right: -100px; animation-delay: 0.2s;
+    }
+    @keyframes orb-in { to { opacity: 1; } }
+
+    /* ─── HEADER ─── */
+    header {
+      position: relative; z-index: 10;
+      border-bottom: 1px solid var(--border);
+      background: rgba(6, 8, 15, 0.7);
+      backdrop-filter: blur(16px);
+    }
+    .header-inner {
+      max-width: 1140px; margin: 0 auto; padding: 0 32px;
+      height: 64px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-family: var(--ff-head); font-weight: 700; font-size: 17px;
+      color: var(--text); text-decoration: none; letter-spacing: -0.02em;
+    }
+    .brand-icon {
+      width: 30px; height: 30px; border-radius: 7px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--cyan) 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--ff-mono); font-size: 12px; font-weight: 600; color: #fff;
+      box-shadow: 0 0 14px var(--glow);
+    }
+    .header-right { display: flex; align-items: center; gap: 20px; }
+    .secure-label {
+      display: flex; align-items: center; gap: 6px;
+      font-family: var(--ff-mono); font-size: 11px; color: var(--text-3); letter-spacing: 0.05em;
+    }
+    .secure-label svg { color: var(--green); }
+    .back-link {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-3); text-decoration: none; transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--text-2); }
+
+    /* ─── MAIN LAYOUT ─── */
+    .checkout-wrap {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto;
+      padding: 56px 32px 80px;
+      display: grid; grid-template-columns: 1fr 420px; gap: 48px; align-items: start;
+    }
+
+    /* ══════════════════════════
+       LEFT — PRODUCT DETAILS
+    ══════════════════════════ */
+    .product-details {}
+
+    .pd-eyebrow {
+      font-family: var(--ff-mono); font-size: 11px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.12em; color: var(--primary-2);
+      margin-bottom: 10px;
+    }
+    .pd-title {
+      font-family: var(--ff-head); font-size: clamp(26px, 3.5vw, 38px);
+      font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 14px;
+    }
+    .pd-title span {
+      background: linear-gradient(90deg, var(--primary-2), var(--cyan));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .pd-sub {
+      font-size: 15px; color: var(--text-2); line-height: 1.7; font-weight: 300;
+      max-width: 520px; margin-bottom: 36px;
+    }
+
+    /* What's included */
+    .includes-title {
+      font-family: var(--ff-mono); font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-3);
+      margin-bottom: 16px;
+    }
+    .includes-list {
+      list-style: none; display: flex; flex-direction: column; gap: 0;
+      margin-bottom: 40px;
+    }
+    .inc-item {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .inc-item:last-child { border-bottom: none; }
+    .inc-icon {
+      width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+      background: var(--surface); border: 1px solid var(--border-2);
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+      margin-top: 1px;
+    }
+    .inc-text strong { display: block; font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .inc-text span { font-size: 13px; color: var(--text-2); line-height: 1.5; }
+
+    /* Code preview strip */
+    .code-strip {
+      background: var(--bg-3); border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden;
+    }
+    .code-strip-bar {
+      display: flex; align-items: center; gap: 6px; padding: 10px 14px;
+      background: rgba(14,21,37,0.8); border-bottom: 1px solid var(--border);
+    }
+    .cd { width: 10px; height: 10px; border-radius: 50%; }
+    .cd-r { background: #FF5F57; } .cd-y { background: #FEBC2E; } .cd-g { background: #28C840; }
+    .code-strip-title { font-family: var(--ff-mono); font-size: 11px; color: var(--text-3); margin-left: 6px; }
+    .code-strip-body {
+      padding: 18px 20px; font-family: var(--ff-mono); font-size: 12px; line-height: 1.8;
+      overflow-x: auto;
+    }
+    .kw { color: #C084FC; } .fn { color: #60A5FA; } .cl { color: #34D399; }
+    .st { color: #FCA5A5; } .cm { color: #4A5568; } .pu { color: var(--text); }
+    .op { color: var(--text-2); }
+
+    /* ══════════════════════════
+       RIGHT — PRICE CARD
+    ══════════════════════════ */
+    .price-card {
+      background: var(--bg-3); border: 1px solid var(--border-2);
+      border-radius: 24px; padding: 40px 36px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.5);
+    }
+    .price-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), var(--cyan), transparent);
+    }
+    .price-card-glow {
+      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      width: 350px; height: 250px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(91,110,245,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .pc-label {
+      font-family: var(--ff-mono); font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.12em; color: var(--primary-2);
+      margin-bottom: 20px; text-align: center;
+    }
+
+    /* Price display */
+    .pc-price {
+      text-align: center; margin-bottom: 4px; line-height: 1;
+    }
+    .pc-currency {
+      font-family: var(--ff-display); font-size: 28px; font-weight: 700;
+      font-style: italic; color: var(--text-2); vertical-align: top; margin-top: 14px;
+    }
+    .pc-amount {
+      font-family: var(--ff-display); font-size: 88px; font-weight: 900;
+      letter-spacing: -0.04em; color: var(--text); font-optical-sizing: auto;
+    }
+    .pc-once {
+      text-align: center; font-family: var(--ff-mono); font-size: 11px;
+      color: var(--text-3); letter-spacing: 0.06em; margin-bottom: 28px;
+    }
+
+    /* Divider */
+    .pc-divider {
+      height: 1px; background: var(--border); margin: 0 -8px 28px;
+    }
+
+    /* Mini feature list */
+    .pc-features {
+      list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 32px;
+    }
+    .pc-features li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 13.5px; color: var(--text-2);
+    }
+    .pc-check {
+      width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
+      background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 9px; color: var(--green);
+    }
+
+    /* CTA Button — LemonSqueezy overlay trigger */
+    .ls-btn {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      width: 100%; padding: 18px 28px; border-radius: 12px;
+      font-family: var(--ff-head); font-size: 17px; font-weight: 700;
+      letter-spacing: -0.01em; color: #fff; text-decoration: none;
+      background: linear-gradient(135deg, var(--primary) 0%, #818CF8 50%, #6366F1 100%);
+      box-shadow: 0 8px 32px rgba(91,110,245,0.4);
+      transition: all 0.25s; border: none; cursor: pointer;
+      position: relative; overflow: hidden;
+    }
+    .ls-btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.07) 50%, transparent 60%);
+      transform: translateX(-100%);
+    }
+    .ls-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 48px rgba(91,110,245,0.5); }
+    .ls-btn:hover::after { animation: shimmer 0.6s ease forwards; }
+    @keyframes shimmer { to { transform: translateX(100%); } }
+
+    /* LemonSqueezy branding note */
+    .ls-note {
+      margin-top: 14px; text-align: center;
+      font-size: 12px; color: var(--text-3); font-family: var(--ff-mono);
+      display: flex; align-items: center; justify-content: center; gap: 6px;
+    }
+
+    /* LemonSqueezy logo (text-based) */
+    .ls-logo {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-weight: 600; color: #EFD500;
+    }
+    .ls-logo svg { width: 14px; height: 14px; }
+
+    /* Trust items */
+    .pc-trust {
+      margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .trust-row {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 12.5px; color: var(--text-3);
+    }
+    .trust-row svg { color: var(--green); flex-shrink: 0; margin-top: 1px; }
+    .trust-row strong { color: var(--text-2); }
+
+    /* ─── FAQ STRIP ─── */
+    .faq-strip {
+      margin-top: 48px; padding-top: 48px;
+      border-top: 1px solid var(--border);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    }
+    .faq-mini { padding: 20px 0; border-bottom: 1px solid var(--border); }
+    .faq-mini-q {
+      font-size: 14px; font-weight: 500; margin-bottom: 6px;
+      color: var(--text);
+    }
+    .faq-mini-a { font-size: 13.5px; color: var(--text-2); line-height: 1.6; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      .checkout-wrap { grid-template-columns: 1fr; gap: 40px; padding: 32px 20px 64px; }
+      .price-card { padding: 32px 28px; }
+      .pc-amount { font-size: 72px; }
+      .faq-strip { grid-template-columns: 1fr; }
+      .header-inner { padding: 0 20px; }
+      .secure-label { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-orb bg-orb-1"></div>
+<div class="bg-orb bg-orb-2"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <a href="index-v2.html" class="brand">
+      <span class="brand-icon">A↗</span>
+      AdopenAPI
+    </a>
+    <div class="header-right">
+      <div class="secure-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Payments by LemonSqueezy
+      </div>
+      <a href="index-v2.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- CHECKOUT WRAP -->
+<div class="checkout-wrap">
+
+  <!-- LEFT — PRODUCT DETAILS -->
+  <div class="product-details">
+    <p class="pd-eyebrow">Lifetime license</p>
+    <h1 class="pd-title">
+      Zero-config OpenAPI docs<br/>
+      <span>for AdonisJS.</span>
+    </h1>
+    <p class="pd-sub">
+      AdopenAPI reads your TypeScript return types and AdonisJS routes to generate a fully compliant OpenAPI 3.1.0 specification — automatically. No decorators, no comments, no maintenance.
+    </p>
+
+    <p class="includes-title">What's included</p>
+    <ul class="includes-list">
+      <li class="inc-item">
+        <span class="inc-icon">🔍</span>
+        <div class="inc-text">
+          <strong>AST-powered type analysis</strong>
+          <span>Full TypeScript AST parser — understands generics, unions, intersections, Lucid models, and custom interfaces.</span>
+        </div>
+      </li>
+      <li class="inc-item">
+        <span class="inc-icon">🛣️</span>
+        <div class="inc-text">
+          <strong>Automatic route discovery</strong>
+          <span>Reads your AdonisJS router config — HTTP verbs, path params, middleware, controller bindings.</span>
+        </div>
+      </li>
+      <li class="inc-item">
+        <span class="inc-icon">🎛️</span>
+        <div class="inc-text">
+          <strong>VineJS validator integration</strong>
+          <span>Your request validators become OpenAPI request body and query parameter schemas. Zero duplication.</span>
+        </div>
+      </li>
+      <li class="inc-item">
+        <span class="inc-icon">🖥️</span>
+        <div class="inc-text">
+          <strong>Swagger UI out of the box</strong>
+          <span>Interactive API explorer served directly from your AdonisJS app at <code style="font-family:var(--ff-mono);font-size:0.85em;color:var(--cyan)">/api/docs</code>.</span>
+        </div>
+      </li>
+      <li class="inc-item">
+        <span class="inc-icon">🔄</span>
+        <div class="inc-text">
+          <strong>Always in sync, never stale</strong>
+          <span>The spec is generated from your actual code. Update a model, the docs update automatically.</span>
+        </div>
+      </li>
+      <li class="inc-item">
+        <span class="inc-icon">♾️</span>
+        <div class="inc-text">
+          <strong>Unlimited projects · All future updates</strong>
+          <span>One license for every AdonisJS project you build, now and in the future. No renewal, ever.</span>
+        </div>
+      </li>
+    </ul>
+
+    <!-- Code preview -->
+    <div class="code-strip">
+      <div class="code-strip-bar">
+        <span class="cd cd-r"></span><span class="cd cd-y"></span><span class="cd cd-g"></span>
+        <span class="code-strip-title">PostsController.ts — zero extra code needed</span>
+      </div>
+      <div class="code-strip-body">
+<pre><span class="kw">export default</span> <span class="kw">class</span> <span class="cl">PostsController</span> <span class="pu">{</span>
+  <span class="cm">// Return type is all AdopenAPI needs</span>
+  <span class="kw">async</span> <span class="fn">index</span><span class="pu">():</span> <span class="cl">Promise</span><span class="pu">&lt;</span><span class="cl">Post</span><span class="pu">[]&gt;</span> <span class="pu">{</span>
+    <span class="kw">return</span> <span class="cl">Post</span><span class="pu">.</span><span class="fn">query</span><span class="pu">().</span><span class="fn">preload</span><span class="pu">(</span><span class="st">'author'</span><span class="pu">)</span>
+  <span class="pu">}</span>
+<span class="pu">}</span>
+
+<span class="cm">// → GET /posts → 200 application/json → Post[]</span>
+<span class="cm">// → schema generated from Post model fields</span>
+<span class="cm">// → served at /api/docs automatically</span></pre>
+      </div>
+    </div>
+
+    <!-- Mini FAQ -->
+    <div class="faq-strip">
+      <div class="faq-mini">
+        <div class="faq-mini-q">Which AdonisJS version?</div>
+        <div class="faq-mini-a">AdonisJS v6 with TypeScript 5+. Full support for the latest provider system and module-based router.</div>
+      </div>
+      <div class="faq-mini">
+        <div class="faq-mini-q">Do I get source code?</div>
+        <div class="faq-mini-a">Yes — full source code access. No black-box binary, no obfuscation. Audit and modify freely.</div>
+      </div>
+      <div class="faq-mini">
+        <div class="faq-mini-q">Is there a refund policy?</div>
+        <div class="faq-mini-a">14-day money-back guarantee, no questions asked. LemonSqueezy handles refunds instantly.</div>
+      </div>
+      <div class="faq-mini">
+        <div class="faq-mini-q">Team or agency use?</div>
+        <div class="faq-mini-a">This license covers one developer, unlimited projects. Contact us for multi-seat team licenses.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT — PRICE CARD -->
+  <div>
+    <div class="price-card">
+      <div class="price-card-glow"></div>
+      <p class="pc-label">AdopenAPI — Lifetime License</p>
+
+      <div class="pc-price">
+        <span class="pc-currency">€</span><span class="pc-amount">99</span>
+      </div>
+      <p class="pc-once">One-time payment · No subscription</p>
+
+      <div class="pc-divider"></div>
+
+      <ul class="pc-features">
+        <li><span class="pc-check">✓</span> Unlimited projects &amp; domains</li>
+        <li><span class="pc-check">✓</span> OpenAPI 3.1.0 — latest spec</li>
+        <li><span class="pc-check">✓</span> AST parser + return type inference</li>
+        <li><span class="pc-check">✓</span> VineJS validator integration</li>
+        <li><span class="pc-check">✓</span> Built-in Swagger UI</li>
+        <li><span class="pc-check">✓</span> All future updates, forever</li>
+        <li><span class="pc-check">✓</span> Priority email support &lt; 24h</li>
+        <li><span class="pc-check">✓</span> Full source code access</li>
+        <li><span class="pc-check">✓</span> License key delivered instantly</li>
+      </ul>
+
+      <!--
+        ════════════════════════════════════════
+        LEMONSQUEEZY CHECKOUT BUTTON
+        ════════════════════════════════════════
+
+        Replace the href with your actual LemonSqueezy checkout URL:
+
+          https://YOUR-STORE.lemonsqueezy.com/checkout/buy/YOUR-VARIANT-ID
+            ?checkout[redirect_url]=https://yourdomain.com/success.html
+
+        The class "lemonsqueezy-button" makes it open as an overlay modal.
+
+        To get your checkout URL:
+          1. Log in to app.lemonsqueezy.com
+          2. Products → your product → Share
+          3. Copy the checkout link
+          4. Append ?checkout[redirect_url]=YOUR_SUCCESS_URL
+
+        LemonSqueezy will append ?order_id=xxx to your redirect URL.
+      -->
+      <a
+        href="https://YOUR-STORE.lemonsqueezy.com/checkout/buy/YOUR-VARIANT-ID?checkout[redirect_url]=https://yourdomain.com/success.html"
+        class="ls-btn lemonsqueezy-button"
+      >
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Get AdopenAPI — €99
+      </a>
+
+      <p class="ls-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Powered by
+        <span class="ls-logo">
+          <!-- LemonSqueezy lemon icon (simplified) -->
+          <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C8.5 2 5.5 4.5 5 8c-.5 3 1 6 3.5 8 1 .8 2 1.5 3.5 1.5s2.5-.7 3.5-1.5C18 14 19.5 11 19 8c-.5-3.5-3.5-6-7-6z"/></svg>
+          LemonSqueezy
+        </span>
+        — VAT &amp; taxes handled automatically
+      </p>
+
+      <div class="pc-trust">
+        <div class="trust-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span><strong>Merchant of Record.</strong> LemonSqueezy handles global VAT, sales tax, and compliance — you pay nothing extra.</span>
+        </div>
+        <div class="trust-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span><strong>14-day money-back guarantee.</strong> Doesn't work for your project? Full refund, no questions asked.</span>
+        </div>
+        <div class="trust-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span><strong>Instant delivery.</strong> License key emailed immediately after purchase.</span>
+        </div>
+        <div class="trust-row">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+          <span><strong>Cards, PayPal, and more.</strong> All major payment methods accepted.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

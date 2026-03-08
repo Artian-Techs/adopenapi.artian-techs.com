@@ -1,0 +1,2388 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>AdopenAPI — Zero-Config OpenAPI 3.1.0 for AdonisJS</title>
+    <meta
+      name="description"
+      content="Automatically generate OpenAPI 3.1.0 documentation for your AdonisJS app. No decorators, no comments, no manual schemas — just pure TypeScript."
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --bg: #06080f;
+        --bg-2: #090c16;
+        --bg-3: #0e1525;
+        --surface: #111827;
+        --surface-2: #1a2236;
+        --border: rgba(99, 120, 180, 0.12);
+        --border-2: rgba(99, 120, 180, 0.22);
+        --primary: #5b6ef5;
+        --primary-2: #818cf8;
+        --glow: rgba(91, 110, 245, 0.35);
+        --cyan: #22d3ee;
+        --cyan-dim: rgba(34, 211, 238, 0.15);
+        --green: #34d399;
+        --orange: #fbbf24;
+        --red: #f87171;
+        --text: #eef2ff;
+        --text-2: #94a3b8;
+        --text-3: #4a5568;
+        --ff-head: "Bricolage Grotesque", sans-serif;
+        --ff-display: "Fraunces", serif;
+        --ff-body: "DM Sans", sans-serif;
+        --ff-mono: "JetBrains Mono", monospace;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--ff-body);
+        font-size: 16px;
+        line-height: 1.6;
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--primary);
+        border-radius: 3px;
+      }
+
+      .container {
+        max-width: 1120px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+
+      .tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        font-weight: 500;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 5px 12px;
+        border-radius: 100px;
+        border: 1px solid var(--border-2);
+        background: rgba(91, 110, 245, 0.08);
+        color: var(--primary-2);
+      }
+      .tag .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--cyan);
+        box-shadow: 0 0 6px var(--cyan);
+        animation: pulse-dot 2s ease-in-out infinite;
+      }
+      @keyframes pulse-dot {
+        0%,
+        100% {
+          opacity: 1;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.5;
+          transform: scale(0.8);
+        }
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(28px);
+        transition:
+          opacity 0.7s ease,
+          transform 0.7s ease;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      .reveal-delay-1 {
+        transition-delay: 0.1s;
+      }
+      .reveal-delay-2 {
+        transition-delay: 0.2s;
+      }
+      .reveal-delay-3 {
+        transition-delay: 0.3s;
+      }
+      .reveal-delay-4 {
+        transition-delay: 0.4s;
+      }
+      .reveal-delay-5 {
+        transition-delay: 0.5s;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+        pointer-events: none;
+        z-index: 999;
+        opacity: 0.5;
+      }
+
+      /* ═══ NAV ═══ */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 16px 0;
+        transition:
+          background 0.3s,
+          border-color 0.3s,
+          backdrop-filter 0.3s;
+        border-bottom: 1px solid transparent;
+      }
+      nav.scrolled {
+        background: rgba(6, 8, 15, 0.85);
+        backdrop-filter: blur(20px);
+        border-bottom-color: var(--border);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .nav-logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--ff-head);
+        font-weight: 700;
+        font-size: 18px;
+        color: var(--text);
+        text-decoration: none;
+        letter-spacing: -0.02em;
+      }
+      .nav-logo .logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--cyan) 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--ff-mono);
+        font-size: 13px;
+        font-weight: 600;
+        color: #fff;
+        box-shadow: 0 0 16px var(--glow);
+      }
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        list-style: none;
+      }
+      .nav-links a {
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--text-2);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-family: var(--ff-body);
+        font-weight: 500;
+        font-size: 14px;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
+        border: none;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .btn-primary {
+        background: var(--primary);
+        color: #fff;
+        box-shadow: 0 0 0 0 var(--glow);
+      }
+      .btn-primary:hover {
+        background: var(--primary-2);
+        box-shadow: 0 0 24px var(--glow);
+        transform: translateY(-1px);
+      }
+      .btn-outline {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--border-2);
+      }
+      .btn-outline:hover {
+        background: var(--surface);
+        border-color: var(--primary);
+        color: var(--primary-2);
+      }
+      .btn-xl {
+        font-size: 17px;
+        padding: 18px 44px;
+        border-radius: 12px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      /* ═══ HERO ═══ */
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        padding: 120px 0 80px;
+        position: relative;
+        overflow: hidden;
+      }
+      .hero-bg {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .hero-bg::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(91, 110, 245, 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(91, 110, 245, 0.04) 1px, transparent 1px);
+        background-size: 60px 60px;
+        mask-image: radial-gradient(
+          ellipse 80% 80% at 50% 50%,
+          black 30%,
+          transparent 100%
+        );
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        pointer-events: none;
+        opacity: 0.6;
+      }
+      .orb-1 {
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(
+          circle,
+          rgba(91, 110, 245, 0.3) 0%,
+          transparent 70%
+        );
+        top: -200px;
+        left: -100px;
+        animation: orb-drift 8s ease-in-out infinite alternate;
+      }
+      .orb-2 {
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(
+          circle,
+          rgba(34, 211, 238, 0.15) 0%,
+          transparent 70%
+        );
+        top: 0;
+        right: -100px;
+        animation: orb-drift 10s ease-in-out infinite alternate-reverse;
+      }
+      .orb-3 {
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(
+          circle,
+          rgba(91, 110, 245, 0.12) 0%,
+          transparent 70%
+        );
+        bottom: -100px;
+        left: 30%;
+        animation: orb-drift 12s ease-in-out infinite alternate;
+      }
+      @keyframes orb-drift {
+        from {
+          transform: translate(0, 0) scale(1);
+        }
+        to {
+          transform: translate(40px, 20px) scale(1.08);
+        }
+      }
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        max-width: 880px;
+        margin: 0 auto;
+      }
+      .hero-tag {
+        margin-bottom: 28px;
+      }
+      .hero-title {
+        font-family: var(--ff-head);
+        font-size: clamp(40px, 6vw, 76px);
+        font-weight: 800;
+        line-height: 1.05;
+        letter-spacing: -0.035em;
+        margin-bottom: 24px;
+      }
+      .hero-title .line-accent {
+        background: linear-gradient(
+          90deg,
+          var(--primary-2) 0%,
+          var(--cyan) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .hero-sub {
+        font-size: clamp(16px, 2vw, 19px);
+        color: var(--text-2);
+        max-width: 580px;
+        margin: 0 auto 40px;
+        line-height: 1.7;
+        font-weight: 300;
+      }
+      .hero-cta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 60px;
+      }
+      .hero-price-note {
+        font-family: var(--ff-mono);
+        font-size: 12px;
+        color: var(--text-3);
+        letter-spacing: 0.05em;
+      }
+      .hero-code-preview {
+        position: relative;
+        max-width: 780px;
+        margin: 0 auto;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border-2);
+        box-shadow:
+          0 40px 80px rgba(0, 0, 0, 0.6),
+          0 0 0 1px rgba(91, 110, 245, 0.1);
+      }
+      .code-window-bar {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: var(--bg-3);
+        border-bottom: 1px solid var(--border);
+      }
+      .code-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .code-dot-r {
+        background: #ff5f57;
+      }
+      .code-dot-y {
+        background: #febc2e;
+      }
+      .code-dot-g {
+        background: #28c840;
+      }
+      .code-window-title {
+        font-family: var(--ff-mono);
+        font-size: 12px;
+        color: var(--text-3);
+        margin-left: 8px;
+      }
+      .code-body {
+        background: var(--bg-2);
+        padding: 28px 32px;
+        font-family: var(--ff-mono);
+        font-size: 13.5px;
+        line-height: 1.75;
+        text-align: left;
+        overflow-x: auto;
+      }
+      .kw {
+        color: #c084fc;
+      }
+      .fn {
+        color: #60a5fa;
+      }
+      .cl {
+        color: #34d399;
+      }
+      .st {
+        color: #fca5a5;
+      }
+      .cm {
+        color: #4a5568;
+      }
+      .nm {
+        color: #fbbf24;
+      }
+      .op {
+        color: var(--text-2);
+      }
+      .pu {
+        color: var(--text);
+      }
+      .ty {
+        color: #818cf8;
+      }
+
+      /* ═══ STRIP ═══ */
+      .strip {
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        padding: 32px 0;
+        background: var(--bg-2);
+      }
+      .strip-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 48px;
+      }
+      .stat-item {
+        text-align: center;
+      }
+      .stat-num {
+        font-family: var(--ff-head);
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--text);
+        line-height: 1;
+        background: linear-gradient(90deg, var(--primary-2), var(--cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: var(--text-3);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-top: 4px;
+        font-weight: 500;
+      }
+      .strip-sep {
+        width: 1px;
+        height: 40px;
+        background: var(--border-2);
+      }
+
+      /* ═══ SECTIONS ═══ */
+      section {
+        padding: 100px 0;
+      }
+      .section-tag {
+        margin-bottom: 16px;
+      }
+      .section-title {
+        font-family: var(--ff-head);
+        font-size: clamp(28px, 4vw, 44px);
+        font-weight: 700;
+        line-height: 1.15;
+        letter-spacing: -0.025em;
+        margin-bottom: 16px;
+      }
+      .section-sub {
+        font-size: 17px;
+        color: var(--text-2);
+        max-width: 560px;
+        line-height: 1.7;
+        font-weight: 300;
+      }
+      .section-header {
+        margin-bottom: 64px;
+      }
+      .section-header.centered {
+        text-align: center;
+      }
+      .section-header.centered .section-sub {
+        margin: 0 auto;
+      }
+
+      /* ═══ COMPARISON ═══ */
+      .comparison-bg {
+        background: var(--bg-2);
+      }
+      .comparison-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2px;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border-2);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+      }
+      .comp-panel {
+        padding: 0;
+        background: var(--bg-3);
+      }
+      .comp-panel:last-child {
+        background: rgba(9, 12, 22, 0.9);
+      }
+      .comp-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 20px;
+        border-bottom: 1px solid var(--border);
+        font-family: var(--ff-mono);
+        font-size: 12px;
+      }
+      .comp-header .badge {
+        padding: 3px 10px;
+        border-radius: 4px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .badge-before {
+        background: rgba(251, 191, 36, 0.15);
+        color: var(--orange);
+        border: 1px solid rgba(251, 191, 36, 0.25);
+      }
+      .badge-after {
+        background: rgba(52, 211, 153, 0.12);
+        color: var(--green);
+        border: 1px solid rgba(52, 211, 153, 0.25);
+      }
+      .comp-body {
+        padding: 24px;
+        font-family: var(--ff-mono);
+        font-size: 12.5px;
+        line-height: 1.8;
+        overflow-x: auto;
+        min-height: 380px;
+      }
+      .comp-note {
+        margin-top: 20px;
+        padding: 12px 16px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-family: var(--ff-mono);
+      }
+      .comp-note-before {
+        background: rgba(251, 191, 36, 0.06);
+        border: 1px solid rgba(251, 191, 36, 0.15);
+        color: #92730c;
+      }
+      .comp-note-after {
+        background: rgba(52, 211, 153, 0.06);
+        border: 1px solid rgba(52, 211, 153, 0.15);
+        color: #10705a;
+      }
+      .comp-note span {
+        display: block;
+        color: var(--text-2);
+        margin-top: 4px;
+        font-size: 12px;
+      }
+      .lines-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 4px;
+        margin-top: 16px;
+      }
+      .lines-count-before {
+        background: rgba(251, 191, 36, 0.08);
+        color: var(--orange);
+      }
+      .lines-count-after {
+        background: rgba(52, 211, 153, 0.08);
+        color: var(--green);
+      }
+
+      /* ═══ FEATURES ═══ */
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .feature-card {
+        background: var(--bg);
+        padding: 36px 32px;
+        transition: background 0.25s;
+        position: relative;
+        overflow: hidden;
+      }
+      .feature-card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(91, 110, 245, 0.04) 0%,
+          transparent 60%
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .feature-card:hover {
+        background: var(--bg-3);
+      }
+      .feature-card:hover::after {
+        opacity: 1;
+      }
+      .feature-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 20px;
+        font-size: 20px;
+        background: var(--surface);
+        border: 1px solid var(--border-2);
+      }
+      .feature-title {
+        font-family: var(--ff-head);
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 10px;
+        letter-spacing: -0.01em;
+      }
+      .feature-desc {
+        font-size: 14.5px;
+        color: var(--text-2);
+        line-height: 1.65;
+      }
+
+      /* ═══ HOW IT WORKS ═══ */
+      .how-bg {
+        background: var(--bg-2);
+      }
+      .steps {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        position: relative;
+      }
+      .steps::before {
+        content: "";
+        position: absolute;
+        left: 31px;
+        top: 40px;
+        bottom: 40px;
+        width: 1px;
+        background: linear-gradient(
+          to bottom,
+          var(--primary),
+          var(--cyan),
+          transparent
+        );
+      }
+      .step {
+        display: grid;
+        grid-template-columns: 64px 1fr;
+        gap: 32px;
+        padding: 40px 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .step:last-child {
+        border-bottom: none;
+      }
+      .step-num {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: 1px solid var(--border-2);
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--ff-head);
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--primary-2);
+        flex-shrink: 0;
+        box-shadow: 0 0 20px var(--glow);
+        position: relative;
+        z-index: 1;
+      }
+      .step-label {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        font-weight: 500;
+        color: var(--primary-2);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 8px;
+      }
+      .step-title {
+        font-family: var(--ff-head);
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        margin-bottom: 12px;
+      }
+      .step-desc {
+        font-size: 15px;
+        color: var(--text-2);
+        line-height: 1.7;
+        max-width: 540px;
+      }
+      .step-code {
+        margin-top: 20px;
+        background: var(--bg-3);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 16px 20px;
+        font-family: var(--ff-mono);
+        font-size: 12.5px;
+        line-height: 1.7;
+        overflow-x: auto;
+      }
+
+      /* ═══ TESTIMONIALS ═══ */
+      .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+      }
+      .testimonial-card {
+        background: var(--bg-2);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 28px;
+        transition:
+          border-color 0.25s,
+          transform 0.25s;
+      }
+      .testimonial-card:hover {
+        border-color: var(--primary);
+        transform: translateY(-2px);
+      }
+      .testimonial-stars {
+        margin-bottom: 16px;
+        color: #fbbf24;
+        font-size: 14px;
+        letter-spacing: 2px;
+      }
+      .testimonial-text {
+        font-size: 14.5px;
+        color: var(--text-2);
+        line-height: 1.7;
+        margin-bottom: 20px;
+        font-style: italic;
+      }
+      .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .author-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--cyan));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--ff-head);
+        font-weight: 700;
+        font-size: 14px;
+        color: #fff;
+        flex-shrink: 0;
+      }
+      .author-name {
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .author-role {
+        font-size: 12px;
+        color: var(--text-3);
+      }
+
+      /* ═══ SUPPORT ═══ */
+      .support-bg {
+        background: var(--bg-2);
+      }
+      .support-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 16px;
+        margin-bottom: 56px;
+      }
+      .support-card {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 32px 28px;
+        transition:
+          border-color 0.25s,
+          transform 0.25s,
+          background 0.25s;
+        position: relative;
+        overflow: hidden;
+      }
+      .support-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--primary),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .support-card:hover {
+        border-color: var(--primary);
+        background: var(--bg-3);
+        transform: translateY(-3px);
+      }
+      .support-card:hover::before {
+        opacity: 1;
+      }
+      .support-card-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        border: 1px solid var(--border-2);
+        background: var(--surface);
+        box-shadow: 0 0 20px rgba(91, 110, 245, 0.1);
+      }
+      .support-card-title {
+        font-family: var(--ff-head);
+        font-size: 17px;
+        font-weight: 600;
+        margin-bottom: 8px;
+        letter-spacing: -0.01em;
+      }
+      .support-card-desc {
+        font-size: 14px;
+        color: var(--text-2);
+        line-height: 1.65;
+        margin-bottom: 20px;
+      }
+      .support-card-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--primary-2);
+        text-decoration: none;
+        transition:
+          gap 0.2s,
+          color 0.2s;
+        font-family: var(--ff-mono);
+      }
+      .support-card-link:hover {
+        gap: 10px;
+        color: var(--cyan);
+      }
+      .support-card-link svg {
+        transition: transform 0.2s;
+      }
+      .support-card-link:hover svg {
+        transform: translate(2px, -2px);
+      }
+
+      .support-sla {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1px;
+        background: var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+      }
+      .sla-item {
+        background: var(--bg-3);
+        padding: 28px 24px;
+        text-align: center;
+      }
+      .sla-num {
+        font-family: var(--ff-head);
+        font-size: 32px;
+        font-weight: 800;
+        background: linear-gradient(90deg, var(--primary-2), var(--cyan));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        letter-spacing: -0.03em;
+        line-height: 1;
+        margin-bottom: 6px;
+      }
+      .sla-label {
+        font-size: 13px;
+        color: var(--text-2);
+      }
+
+      /* ═══ PRICING ═══ */
+      .pricing-bg {
+        background: var(--bg-2);
+      }
+      .pricing-card {
+        max-width: 540px;
+        margin: 0 auto;
+        background: var(--bg-3);
+        border: 1px solid var(--border-2);
+        border-radius: 24px;
+        padding: 56px 52px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+      }
+      .pricing-card::before {
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: 10%;
+        right: 10%;
+        height: 2px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          var(--primary),
+          var(--cyan),
+          transparent
+        );
+      }
+      .pricing-glow {
+        position: absolute;
+        top: -100px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 400px;
+        height: 300px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(91, 110, 245, 0.15) 0%,
+          transparent 70%
+        );
+        pointer-events: none;
+      }
+      .pricing-label {
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: var(--primary-2);
+        margin-bottom: 12px;
+      }
+      .pricing-title {
+        font-family: var(--ff-head);
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin-bottom: 32px;
+      }
+      .pricing-price {
+        margin-bottom: 8px;
+        line-height: 1;
+      }
+      .price-currency {
+        font-family: var(--ff-display);
+        font-size: 30px;
+        font-weight: 700;
+        vertical-align: top;
+        margin-top: 18px;
+        color: var(--text-2);
+        font-style: italic;
+      }
+      .price-amount {
+        /* Fraunces for the number — beautiful optical serif at large size */
+        font-family: var(--ff-display);
+        font-size: 96px;
+        font-weight: 900;
+        letter-spacing: -0.04em;
+        color: var(--text);
+        font-variant-numeric: lining-nums;
+        font-optical-sizing: auto;
+      }
+      .price-period {
+        font-size: 14px;
+        color: var(--text-3);
+        margin-bottom: 40px;
+      }
+      .pricing-features {
+        text-align: left;
+        list-style: none;
+        margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .pricing-features li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        font-size: 14.5px;
+        color: var(--text-2);
+      }
+      .pricing-features li .check {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: rgba(52, 211, 153, 0.12);
+        border: 1px solid rgba(52, 211, 153, 0.25);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 10px;
+        color: var(--green);
+        margin-top: 1px;
+      }
+      .pricing-guarantee {
+        margin-top: 24px;
+        padding: 14px 20px;
+        background: rgba(52, 211, 153, 0.05);
+        border: 1px solid rgba(52, 211, 153, 0.15);
+        border-radius: 10px;
+        font-size: 13px;
+        color: var(--text-2);
+      }
+      .pricing-guarantee strong {
+        color: var(--green);
+      }
+      .pricing-cta-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+      }
+      .btn-pricing {
+        width: 100%;
+        font-size: 17px;
+        padding: 18px 32px;
+        border-radius: 12px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          #818cf8 50%,
+          #6366f1 100%
+        );
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 8px 32px rgba(91, 110, 245, 0.4);
+        transition: all 0.25s;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+      }
+      .btn-pricing:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 48px rgba(91, 110, 245, 0.5);
+      }
+      .pricing-note {
+        font-size: 12px;
+        color: var(--text-3);
+        font-family: var(--ff-mono);
+      }
+
+      /* ═══ FAQ ═══ */
+      .faq-list {
+        max-width: 720px;
+        margin: 0 auto;
+      }
+      .faq-item {
+        border-bottom: 1px solid var(--border);
+        overflow: hidden;
+      }
+      .faq-question {
+        width: 100%;
+        background: none;
+        border: none;
+        color: var(--text);
+        text-align: left;
+        cursor: pointer;
+        padding: 24px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        font-family: var(--ff-body);
+        font-size: 16px;
+        font-weight: 500;
+        transition: color 0.2s;
+      }
+      .faq-question:hover {
+        color: var(--primary-2);
+      }
+      .faq-icon {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        border: 1px solid var(--border-2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        color: var(--text-2);
+        transition:
+          transform 0.3s,
+          border-color 0.3s;
+      }
+      .faq-item.open .faq-icon {
+        transform: rotate(45deg);
+        border-color: var(--primary);
+        color: var(--primary-2);
+      }
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition:
+          max-height 0.4s ease,
+          padding 0.3s;
+      }
+      .faq-answer-inner {
+        padding: 0 0 24px;
+        font-size: 15px;
+        color: var(--text-2);
+        line-height: 1.75;
+      }
+      .faq-item.open .faq-answer {
+        max-height: 400px;
+      }
+
+      /* ═══ FOOTER ═══ */
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 48px 0 40px;
+        background: var(--bg);
+      }
+      .footer-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 24px;
+      }
+      .footer-brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: var(--ff-head);
+        font-weight: 700;
+        font-size: 16px;
+        color: var(--text);
+        text-decoration: none;
+      }
+      .footer-logo-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
+        background: linear-gradient(135deg, var(--primary), var(--cyan));
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--ff-mono);
+        font-size: 11px;
+        color: #fff;
+        font-weight: 600;
+      }
+      .footer-links {
+        display: flex;
+        gap: 24px;
+        list-style: none;
+        flex-wrap: wrap;
+      }
+      .footer-links a {
+        font-size: 13px;
+        color: var(--text-3);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .footer-links a:hover {
+        color: var(--text-2);
+      }
+      .footer-copy {
+        font-size: 12px;
+        color: var(--text-3);
+        font-family: var(--ff-mono);
+      }
+
+      @media (max-width: 768px) {
+        .nav-links {
+          display: none;
+        }
+        .comparison-grid {
+          grid-template-columns: 1fr;
+        }
+        .steps::before {
+          display: none;
+        }
+        .step {
+          grid-template-columns: 1fr;
+          gap: 16px;
+        }
+        .step-num {
+          width: 48px;
+          height: 48px;
+          font-size: 16px;
+        }
+        .pricing-card {
+          padding: 36px 28px;
+        }
+        .price-amount {
+          font-size: 72px;
+        }
+        section {
+          padding: 72px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav id="nav">
+      <div class="container nav-inner">
+        <a
+          href="#"
+          class="nav-logo"
+        >
+          <span class="logo-icon">A↗</span>
+          AdopenAPI
+        </a>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#support">Support</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+        <a
+          href="payment-v2.html"
+          class="btn btn-primary"
+          >Get it — 99€</a
+        >
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section
+      class="hero"
+      id="home"
+    >
+      <div class="hero-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+      </div>
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-tag reveal">
+            <span class="tag"
+              ><span class="dot"></span>OpenAPI 3.1.0 · AdonisJS ·
+              TypeScript</span
+            >
+          </div>
+          <h1 class="hero-title reveal reveal-delay-1">
+            Your API docs,<br />
+            <span class="line-accent">written by your code.</span>
+          </h1>
+          <p class="hero-sub reveal reveal-delay-2">
+            AdopenAPI reads your AdonisJS routes and TypeScript Abstract Syntax
+            Tree to generate a complete OpenAPI 3.1.0 spec — automatically. No
+            decorators. No comments. No manual schemas. Ever.
+          </p>
+          <div class="hero-cta reveal reveal-delay-3">
+            <a
+              href="payment-v2.html"
+              class="btn btn-primary btn-xl"
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+              </svg>
+              Get AdopenAPI — 99€
+            </a>
+            <a
+              href="#comparison"
+              class="btn btn-outline btn-xl"
+              >See it in action</a
+            >
+          </div>
+          <p class="hero-price-note reveal reveal-delay-4">
+            One-time payment · Lifetime access · No subscription
+          </p>
+          <div class="hero-code-preview reveal reveal-delay-5">
+            <div class="code-window-bar">
+              <span class="code-dot code-dot-r"></span>
+              <span class="code-dot code-dot-y"></span>
+              <span class="code-dot code-dot-g"></span>
+              <span class="code-window-title">UsersController.ts</span>
+            </div>
+            <div class="code-body">
+              <pre><span class="kw">export default</span> <span class="kw">class</span> <span class="cl">UsersController</span> <span class="pu">{</span>
+  <span class="kw">async</span> <span class="fn">index</span><span class="pu">(</span><span class="pu">)</span><span class="pu">:</span> <span class="cl">Promise</span><span class="pu">&lt;</span><span class="cl">User</span><span class="pu">[]&gt;</span> <span class="pu">{</span>
+    <span class="kw">return</span> <span class="cl">User</span><span class="pu">.</span><span class="fn">all</span><span class="pu">()</span>
+  <span class="pu">}</span>
+
+  <span class="kw">async</span> <span class="fn">show</span><span class="pu">(</span><span class="pu">{</span> params <span class="pu">}</span><span class="pu">:</span> <span class="cl">HttpContext</span><span class="pu">)</span><span class="pu">:</span> <span class="cl">Promise</span><span class="pu">&lt;</span><span class="cl">User</span><span class="pu">&gt;</span> <span class="pu">{</span>
+    <span class="kw">return</span> <span class="cl">User</span><span class="pu">.</span><span class="fn">findOrFail</span><span class="pu">(</span>params<span class="pu">.</span>id<span class="pu">)</span>
+  <span class="pu">}</span>
+<span class="pu">}</span>
+
+<span class="cm">// ↑ That's literally all you write.</span>
+<span class="cm">// AdopenAPI generates the full spec below ↓</span>
+</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <div class="strip">
+      <div class="container strip-inner">
+        <div class="stat-item">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Decorators needed</div>
+        </div>
+        <div class="strip-sep"></div>
+        <div class="stat-item">
+          <div class="stat-num">OpenAPI 3.1</div>
+          <div class="stat-label">Latest spec</div>
+        </div>
+        <div class="strip-sep"></div>
+        <div class="stat-item">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">TypeScript-native</div>
+        </div>
+        <div class="strip-sep"></div>
+        <div class="stat-item">
+          <div class="stat-num">AST</div>
+          <div class="stat-label">Powered parser</div>
+        </div>
+        <div class="strip-sep"></div>
+        <div class="stat-item">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Routes supported</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPARISON -->
+    <section
+      class="comparison-bg"
+      id="comparison"
+    >
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-tag"><span class="tag">The difference</span></div>
+          <h2 class="section-title">
+            Stop writing<br />what TypeScript already knows.
+          </h2>
+          <p class="section-sub">
+            Every type annotation you write is documentation waiting to be
+            published. AdopenAPI reads it so you don't have to repeat yourself.
+          </p>
+        </div>
+        <div class="comparison-grid reveal">
+          <div class="comp-panel">
+            <div class="comp-header">
+              <span class="badge badge-before">Before</span>
+              <span style="color: var(--text-3)"
+                >Without AdopenAPI — manual OpenAPI</span
+              >
+            </div>
+            <div class="comp-body">
+              <pre><span class="cm">// 🔴 You write all of this BY HAND</span>
+
+<span class="kw">const</span> userSchema <span class="op">=</span> <span class="pu">{</span>
+  type<span class="pu">:</span> <span class="st">'object'</span><span class="pu">,</span>
+  properties<span class="pu">:</span> <span class="pu">{</span>
+    id<span class="pu">:</span>    <span class="pu">{</span> type<span class="pu">:</span> <span class="st">'number'</span> <span class="pu">},</span>
+    name<span class="pu">:</span>  <span class="pu">{</span> type<span class="pu">:</span> <span class="st">'string'</span> <span class="pu">},</span>
+    email<span class="pu">:</span> <span class="pu">{</span> type<span class="pu">:</span> <span class="st">'string'</span><span class="pu">,</span> format<span class="pu">:</span> <span class="st">'email'</span> <span class="pu">},</span>
+  <span class="pu">}</span>
+<span class="pu">}</span>
+
+<span class="kw">const</span> spec <span class="op">=</span> <span class="pu">{</span>
+  paths<span class="pu">:</span> <span class="pu">{</span>
+    <span class="st">'/users'</span><span class="pu">:</span> <span class="pu">{</span>
+      get<span class="pu">:</span> <span class="pu">{</span>
+        responses<span class="pu">:</span> <span class="pu">{</span>
+          <span class="st">'200'</span><span class="pu">:</span> <span class="pu">{</span>
+            content<span class="pu">:</span> <span class="pu">{</span>
+              <span class="st">'application/json'</span><span class="pu">:</span> <span class="pu">{</span>
+                schema<span class="pu">:</span> <span class="pu">{</span>
+                  type<span class="pu">:</span> <span class="st">'array'</span><span class="pu">,</span>
+                  items<span class="pu">:</span> <span class="pu">{</span> <span class="op">$</span>ref<span class="pu">:</span> <span class="st">'#/components/schemas/User'</span> <span class="pu">}</span>
+                <span class="pu">}</span>
+              <span class="pu">}</span>
+            <span class="pu">}</span>
+          <span class="pu">}</span>
+        <span class="pu">}</span>
+      <span class="pu">}</span>
+    <span class="pu">}</span>
+  <span class="pu">}</span>
+<span class="pu">}</span></pre>
+              <div class="comp-note comp-note-before">
+                Duplicated work — schema drifts from code.
+                <span
+                  >Every model change requires updating the spec manually.</span
+                >
+              </div>
+              <div class="lines-count lines-count-before">
+                ~40+ lines of boilerplate per endpoint
+              </div>
+            </div>
+          </div>
+          <div class="comp-panel">
+            <div class="comp-header">
+              <span class="badge badge-after">After</span>
+              <span style="color: var(--text-3)"
+                >With AdopenAPI — zero config</span
+              >
+            </div>
+            <div class="comp-body">
+              <pre><span class="cm">// ✅ Just write your controller normally</span>
+
+<span class="kw">export default</span> <span class="kw">class</span> <span class="cl">UsersController</span> <span class="pu">{</span>
+
+  <span class="kw">async</span> <span class="fn">index</span><span class="pu">()</span><span class="pu">:</span> <span class="cl">Promise</span><span class="pu">&lt;</span><span class="cl">User</span><span class="pu">[]&gt;</span> <span class="pu">{</span>
+    <span class="kw">return</span> <span class="cl">User</span><span class="pu">.</span><span class="fn">all</span><span class="pu">()</span>
+  <span class="pu">}</span>
+
+  <span class="kw">async</span> <span class="fn">show</span><span class="pu">(</span><span class="pu">{</span> params <span class="pu">}</span><span class="pu">:</span> <span class="cl">HttpContext</span><span class="pu">)</span><span class="pu">:</span> <span class="cl">Promise</span><span class="pu">&lt;</span><span class="cl">User</span><span class="pu">&gt;</span> <span class="pu">{</span>
+    <span class="kw">return</span> <span class="cl">User</span><span class="pu">.</span><span class="fn">findOrFail</span><span class="pu">(</span>params<span class="pu">.</span>id<span class="pu">)</span>
+  <span class="pu">}</span>
+
+<span class="pu">}</span>
+
+
+
+<span class="cm">// AdopenAPI reads `: Promise&lt;User[]&gt;`</span>
+<span class="cm">// → introspects the User model fields</span>
+<span class="cm">// → generates the full OpenAPI spec</span>
+<span class="cm">// → serves it at /api/docs</span></pre>
+              <div class="comp-note comp-note-after">
+                Single source of truth — always in sync.
+                <span>Update your model, the spec updates automatically.</span>
+              </div>
+              <div class="lines-count lines-count-after">
+                0 extra lines — spec generated automatically
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features">
+      <div class="container">
+        <div class="section-header centered reveal">
+          <div class="section-tag"><span class="tag">Features</span></div>
+          <h2 class="section-title">
+            Everything you need.<br />Nothing you don't.
+          </h2>
+          <p class="section-sub">
+            AdopenAPI is surgical — it does one thing exceptionally well and
+            integrates into your existing AdonisJS workflow without friction.
+          </p>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card reveal">
+            <div class="feature-icon">🔍</div>
+            <h3 class="feature-title">AST-Powered Analysis</h3>
+            <p class="feature-desc">
+              Parses your TypeScript source files using a full AST parser — not
+              regex hacks. It understands generics, intersections, unions, and
+              complex type hierarchies.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-icon">🛣️</div>
+            <h3 class="feature-title">Route-Aware Generation</h3>
+            <p class="feature-desc">
+              Reads your AdonisJS router config to discover all endpoints, their
+              HTTP verbs, path parameters, and controller method bindings
+              automatically.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-2">
+            <div class="feature-icon">⚡</div>
+            <h3 class="feature-title">Return Type Inference</h3>
+            <p class="feature-desc">
+              Introspects your controller method return types — including Lucid
+              models, custom interfaces, and utility types — and converts them
+              to JSON Schema automatically.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-3">
+            <div class="feature-icon">📐</div>
+            <h3 class="feature-title">OpenAPI 3.1.0 Compliant</h3>
+            <p class="feature-desc">
+              Generates spec that fully conforms to the OpenAPI 3.1.0 standard,
+              including proper $ref usage, component schemas, and JSON Schema
+              vocabulary.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-4">
+            <div class="feature-icon">🔄</div>
+            <h3 class="feature-title">Always In Sync</h3>
+            <p class="feature-desc">
+              Because the spec is generated from your actual code, it can never
+              drift out of date. Change a model field and the spec reflects it
+              on the next request.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-5">
+            <div class="feature-icon">📦</div>
+            <h3 class="feature-title">Zero Runtime Overhead</h3>
+            <p class="feature-desc">
+              Spec generation happens at startup or on-demand. Your production
+              request path is completely unaffected — no middleware, no
+              reflection, no performance cost.
+            </p>
+          </div>
+          <div class="feature-card reveal">
+            <div class="feature-icon">🎛️</div>
+            <h3 class="feature-title">VineJS Request Validation</h3>
+            <p class="feature-desc">
+              If you use VineJS for request validation, AdopenAPI reads your
+              validators and maps them to OpenAPI request body schemas and query
+              parameter definitions.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-1">
+            <div class="feature-icon">🖥️</div>
+            <h3 class="feature-title">Swagger UI Included</h3>
+            <p class="feature-desc">
+              Serves a beautiful Swagger UI documentation explorer out of the
+              box. Your team gets a live, interactive API reference the moment
+              they open the browser.
+            </p>
+          </div>
+          <div class="feature-card reveal reveal-delay-2">
+            <div class="feature-icon">🔧</div>
+            <h3 class="feature-title">Fully Configurable</h3>
+            <p class="feature-desc">
+              Override generated schemas, add metadata, exclude routes, or
+              extend with custom transformers — full control when you need it,
+              sensible defaults when you don't.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section
+      class="how-bg"
+      id="how-it-works"
+    >
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-tag"><span class="tag">How it works</span></div>
+          <h2 class="section-title">Three steps.<br />One command.</h2>
+          <p class="section-sub">
+            AdopenAPI plugs into your AdonisJS project with a single install. No
+            config file needed to get started.
+          </p>
+        </div>
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-label">Install</div>
+              <h3 class="step-title">Add the package to your project</h3>
+              <p class="step-desc">
+                Install AdopenAPI via npm and configure it with the built-in Ace
+                command. It registers itself as an AdonisJS provider
+                automatically.
+              </p>
+              <div class="step-code">
+                <pre><span class="nm">$</span> <span class="fn">node</span> ace <span class="fn">add</span> <span class="st">@melchyore/adonis-open-api</span></pre>
+              </div>
+            </div>
+          </div>
+          <div class="step reveal">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-label">Write</div>
+              <h3 class="step-title">
+                Write controllers as you normally would
+              </h3>
+              <p class="step-desc">
+                No changes to your workflow. Write your AdonisJS controllers
+                with proper TypeScript return types — which you should be doing
+                anyway. AdopenAPI does the rest.
+              </p>
+              <div class="step-code">
+                <pre><span class="cm">// app/controllers/posts_controller.ts</span>
+<span class="kw">export default</span> <span class="kw">class</span> <span class="cl">PostsController</span> <span class="pu">{</span>
+  <span class="kw">async</span> <span class="fn">index</span><span class="pu">():</span> <span class="cl">Promise</span><span class="pu">&lt;</span><span class="cl">Post</span><span class="pu">[]&gt;</span> <span class="pu">{</span>
+    <span class="kw">return</span> <span class="cl">Post</span><span class="pu">.</span><span class="fn">query</span><span class="pu">().</span><span class="fn">preload</span><span class="pu">(</span><span class="st">'author'</span><span class="pu">)</span>
+  <span class="pu">}</span>
+  <span class="kw">async</span> <span class="fn">store</span><span class="pu">(</span><span class="pu">{</span> request <span class="pu">}</span><span class="pu">:</span> <span class="cl">HttpContext</span><span class="pu">):</span> <span class="cl">Promise</span><span class="pu">&lt;</span><span class="cl">Post</span><span class="pu">&gt;</span> <span class="pu">{</span>
+    <span class="kw">const</span> data <span class="op">=</span> <span class="kw">await</span> request<span class="pu">.</span><span class="fn">validateUsing</span><span class="pu">(</span>createPostValidator<span class="pu">)</span>
+    <span class="kw">return</span> <span class="cl">Post</span><span class="pu">.</span><span class="fn">create</span><span class="pu">(</span>data<span class="pu">)</span>
+  <span class="pu">}</span>
+<span class="pu">}</span></pre>
+              </div>
+            </div>
+          </div>
+          <div class="step reveal">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-label">Ship</div>
+              <h3 class="step-title">
+                Your docs are live at
+                <code style="font-size: 0.85em; color: var(--cyan)"
+                  >/api/docs</code
+                >
+              </h3>
+              <p class="step-desc">
+                Start your AdonisJS server and navigate to
+                <code>/api/docs</code>. A fully interactive Swagger UI powered
+                by your live OpenAPI 3.1.0 spec is ready for your team, clients,
+                or CI pipeline.
+              </p>
+              <div class="step-code">
+                <pre><span class="nm">$</span> <span class="fn">node</span> ace serve --hmr
+
+<span class="cm"># → Routes analyzed: 24</span>
+<span class="cm"># → Schemas generated: 8</span>
+<span class="cm"># → OpenAPI spec ready at /api/docs</span>
+<span class="cm"># → Swagger UI at /api/docs/ui</span></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section id="social-proof">
+      <div class="container">
+        <div class="section-header centered reveal">
+          <div class="section-tag">
+            <span class="tag">Developer feedback</span>
+          </div>
+          <h2 class="section-title">What developers are saying</h2>
+          <p class="section-sub">
+            Early adopters who made the switch from manual schema writing.
+          </p>
+        </div>
+        <div class="testimonials-grid">
+          <div class="testimonial-card reveal">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "We had 40+ endpoints with hand-written swagger. The schemas were
+              always wrong. AdopenAPI replaced all of it in an afternoon and our
+              docs are finally accurate."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">TK</div>
+              <div>
+                <div class="author-name">Thomas K.</div>
+                <div class="author-role">Senior Backend Engineer</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card reveal reveal-delay-1">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "The AST-based approach is brilliant. It actually understands my
+              TypeScript types — not just simple primitives but generics,
+              unions, everything. Absolutely worth the price."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">ML</div>
+              <div>
+                <div class="author-name">Marie L.</div>
+                <div class="author-role">Fullstack Developer, Freelance</div>
+              </div>
+            </div>
+          </div>
+          <div class="testimonial-card reveal reveal-delay-2">
+            <div class="testimonial-stars">★★★★★</div>
+            <p class="testimonial-text">
+              "The VineJS integration alone saved us hours. Our request body
+              schemas are generated directly from our validators. No
+              duplication, no drift, no maintenance."
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">RC</div>
+              <div>
+                <div class="author-name">Rayan C.</div>
+                <div class="author-role">Tech Lead, SaaS startup</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════
+     SUPPORT SECTION
+════════════════════════════════════════════ -->
+    <section
+      class="support-bg"
+      id="support"
+    >
+      <div class="container">
+        <div class="section-header centered reveal">
+          <div class="section-tag"><span class="tag">Support</span></div>
+          <h2 class="section-title">We've got your back.</h2>
+          <p class="section-sub">
+            Multiple ways to get help — from instant self-service docs to direct
+            personal support from the author.
+          </p>
+        </div>
+
+        <div class="support-grid">
+          <!-- Email -->
+          <div class="support-card reveal">
+            <div class="support-card-icon">✉️</div>
+            <h3 class="support-card-title">Priority Email Support</h3>
+            <p class="support-card-desc">
+              Got a bug, a specific use case, or something that doesn't work as
+              expected? Email us directly and get a personal response from the
+              author — not a bot.
+            </p>
+            <a
+              href="mailto:support@adopenapi.dev"
+              class="support-card-link"
+            >
+              support@adopenapi.dev
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line
+                  x1="7"
+                  y1="17"
+                  x2="17"
+                  y2="7"
+                />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Docs -->
+          <div class="support-card reveal reveal-delay-1">
+            <div class="support-card-icon">📚</div>
+            <h3 class="support-card-title">Full Documentation</h3>
+            <p class="support-card-desc">
+              Comprehensive guides covering installation, configuration, type
+              support, VineJS integration, advanced overrides, and real-world
+              examples. Updated with every release.
+            </p>
+            <a
+              href="#"
+              class="support-card-link"
+            >
+              Read the docs
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line
+                  x1="7"
+                  y1="17"
+                  x2="17"
+                  y2="7"
+                />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- GitHub -->
+          <div class="support-card reveal reveal-delay-2">
+            <div class="support-card-icon">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="var(--text-2)"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"
+                />
+              </svg>
+            </div>
+            <h3 class="support-card-title">GitHub Issues</h3>
+            <p class="support-card-desc">
+              Found a bug? Have a feature request? Open an issue on GitHub. The
+              repository is publicly tracked so you can follow fixes and
+              improvements in real time.
+            </p>
+            <a
+              href="#"
+              class="support-card-link"
+            >
+              Open an issue
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line
+                  x1="7"
+                  y1="17"
+                  x2="17"
+                  y2="7"
+                />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Discord -->
+          <div class="support-card reveal reveal-delay-3">
+            <div class="support-card-icon">💬</div>
+            <h3 class="support-card-title">Community Discord</h3>
+            <p class="support-card-desc">
+              Join the AdonisJS community Discord server. Ask questions, share
+              your setup, and get help from other AdopenAPI users and the
+              broader AdonisJS ecosystem.
+            </p>
+            <a
+              href="#"
+              class="support-card-link"
+            >
+              Join Discord
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <line
+                  x1="7"
+                  y1="17"
+                  x2="17"
+                  y2="7"
+                />
+                <polyline points="7 7 17 7 17 17" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- SLA Promises -->
+        <div class="support-sla reveal">
+          <div class="sla-item">
+            <div class="sla-num">&lt; 24h</div>
+            <div class="sla-label">Email response time (business days)</div>
+          </div>
+          <div class="sla-item">
+            <div class="sla-num">14 days</div>
+            <div class="sla-label">
+              Money-back guarantee, no questions asked
+            </div>
+          </div>
+          <div class="sla-item">
+            <div class="sla-num">Lifetime</div>
+            <div class="sla-label">Updates included with your purchase</div>
+          </div>
+          <div class="sla-item">
+            <div class="sla-num">1 person</div>
+            <div class="sla-label">Direct access to the author</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section
+      class="pricing-bg"
+      id="pricing"
+    >
+      <div class="container">
+        <div class="section-header centered reveal">
+          <div class="section-tag"><span class="tag">Pricing</span></div>
+          <h2 class="section-title">One price.<br />Yours forever.</h2>
+          <p class="section-sub">
+            No subscriptions. No per-seat fees. No license renewals. Pay once
+            and use AdopenAPI on every project you'll ever build.
+          </p>
+        </div>
+        <div class="pricing-card reveal">
+          <div class="pricing-glow"></div>
+          <div class="pricing-label">AdopenAPI — Lifetime License</div>
+          <div class="pricing-title">Everything you need, once.</div>
+          <div class="pricing-price">
+            <span class="price-currency">€</span
+            ><span class="price-amount">99</span>
+          </div>
+          <p class="price-period">One-time payment · No recurring fees</p>
+          <ul class="pricing-features">
+            <li>
+              <span class="check">✓</span
+              ><span
+                >Unlimited projects &amp; domains — use on every AdonisJS app
+                you build</span
+              >
+            </li>
+            <li>
+              <span class="check">✓</span
+              ><span
+                >Full OpenAPI 3.1.0 spec generation from TypeScript return
+                types</span
+              >
+            </li>
+            <li>
+              <span class="check">✓</span
+              ><span
+                >AST-powered route analysis — reads your actual router
+                config</span
+              >
+            </li>
+            <li>
+              <span class="check">✓</span
+              ><span
+                >VineJS validator integration for request body schemas</span
+              >
+            </li>
+            <li>
+              <span class="check">✓</span
+              ><span>Built-in Swagger UI served from your AdonisJS app</span>
+            </li>
+            <li>
+              <span class="check">✓</span
+              ><span
+                >All future updates included — buy once, get everything</span
+              >
+            </li>
+            <li>
+              <span class="check">✓</span
+              ><span>Priority email support — response within 24h</span>
+            </li>
+            <li>
+              <span class="check">✓</span
+              ><span>Source code access — no black-box dependencies</span>
+            </li>
+          </ul>
+          <div class="pricing-cta-wrapper">
+            <a
+              href="payment-v2.html"
+              class="btn-pricing"
+              >Get AdopenAPI — €99 one-time</a
+            >
+            <p class="pricing-note">
+              Secure payment via Stripe · Instant delivery
+            </p>
+          </div>
+          <div class="pricing-guarantee">
+            <strong>14-day money-back guarantee.</strong> If AdopenAPI doesn't
+            work for your AdonisJS project, email us within 14 days for a full
+            refund — no questions asked.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="container">
+        <div class="section-header centered reveal">
+          <div class="section-tag"><span class="tag">FAQ</span></div>
+          <h2 class="section-title">Questions answered.</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item">
+            <button
+              class="faq-question"
+              aria-expanded="false"
+            >
+              Which versions of AdonisJS are supported?<span class="faq-icon"
+                >+</span
+              >
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                AdopenAPI is built for <strong>AdonisJS v6</strong> and requires
+                TypeScript 5+. It leverages the latest AdonisJS provider system
+                and the modern module-based router. AdonisJS v5 is not
+                supported.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button
+              class="faq-question"
+              aria-expanded="false"
+            >
+              Do I need to annotate every method with decorators?<span
+                class="faq-icon"
+                >+</span
+              >
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                No — that's the whole point.
+                <strong>Zero decorators required.</strong> AdopenAPI reads your
+                TypeScript return types directly through AST analysis. If you
+                have proper TypeScript types on your controller methods (which
+                is good practice anyway), you get OpenAPI documentation for
+                free.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button
+              class="faq-question"
+              aria-expanded="false"
+            >
+              What types does it support? What about complex generics?<span
+                class="faq-icon"
+                >+</span
+              >
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                AdopenAPI handles primitives, arrays, objects, Lucid models,
+                custom interfaces, type aliases, generics
+                (<code>Promise&lt;T&gt;</code>,
+                <code>Paginator&lt;T&gt;</code>), union types, intersection
+                types, and optional properties. The AST parser gives it a deep
+                understanding of TypeScript's type system.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button
+              class="faq-question"
+              aria-expanded="false"
+            >
+              How does it handle authentication and security schemes?<span
+                class="faq-icon"
+                >+</span
+              >
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                AdopenAPI detects AdonisJS auth middleware applied to routes and
+                automatically adds the appropriate security requirements to
+                those endpoints in the OpenAPI spec. Bearer token, API key, and
+                session-based auth schemes are supported through the
+                configuration.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button
+              class="faq-question"
+              aria-expanded="false"
+            >
+              Can I customize or override the generated spec?<span
+                class="faq-icon"
+                >+</span
+              >
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Yes. You can override any generated schema, add global metadata
+                (title, description, servers, contact), exclude specific routes,
+                add custom tags, or write schema transformers that run after
+                generation. The escape hatch is always there — but most projects
+                never need it.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button
+              class="faq-question"
+              aria-expanded="false"
+            >
+              Is it production-safe? Will it affect performance?<span
+                class="faq-icon"
+                >+</span
+              >
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                Completely safe. The AST analysis happens at startup (or
+                on-demand), not on every request. The generated spec is cached
+                in memory. Your production request path is untouched — no
+                middleware wrapping, no runtime reflection, no overhead
+                whatsoever.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button
+              class="faq-question"
+              aria-expanded="false"
+            >
+              What do I get with the license? Is there a team plan?<span
+                class="faq-icon"
+                >+</span
+              >
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                The €99 license covers <strong>unlimited projects</strong> for a
+                single developer. For teams of 3+, a team license is available —
+                contact us for pricing. All licenses include source code, future
+                updates, and priority support.
+              </div>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button
+              class="faq-question"
+              aria-expanded="false"
+            >
+              What's the refund policy?<span class="faq-icon">+</span>
+            </button>
+            <div class="faq-answer">
+              <div class="faq-answer-inner">
+                14-day money-back guarantee, no questions asked. If AdopenAPI
+                doesn't work for your project within 14 days of purchase, email
+                us and we'll refund you in full. We want you to be confident
+                before you buy.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section
+      style="
+        padding: 80px 0;
+        background: var(--bg-2);
+        border-top: 1px solid var(--border);
+      "
+    >
+      <div
+        class="container"
+        style="text-align: center"
+      >
+        <h2
+          class="section-title reveal"
+          style="max-width: 600px; margin: 0 auto 16px"
+        >
+          Stop writing docs.<br />
+          <span
+            style="
+              background: linear-gradient(90deg, var(--primary-2), var(--cyan));
+              -webkit-background-clip: text;
+              -webkit-text-fill-color: transparent;
+              background-clip: text;
+            "
+            >Start shipping code.</span
+          >
+        </h2>
+        <p
+          class="section-sub reveal reveal-delay-1"
+          style="margin: 0 auto 36px"
+        >
+          Your TypeScript types already describe your API. It's time your
+          documentation reflected that.
+        </p>
+        <div
+          class="reveal reveal-delay-2"
+          style="
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <a
+            href="payment-v2.html"
+            class="btn btn-primary btn-xl"
+            >Get AdopenAPI — €99 one-time</a
+          >
+        </div>
+        <p
+          class="hero-price-note reveal reveal-delay-3"
+          style="margin-top: 16px"
+        >
+          14-day money-back guarantee · Instant delivery · No subscription
+        </p>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="container footer-inner">
+        <a
+          href="#"
+          class="footer-brand"
+        >
+          <span class="footer-logo-icon">A↗</span>
+          AdopenAPI
+        </a>
+        <ul class="footer-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#support">Support</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#">Documentation</a></li>
+        </ul>
+        <p class="footer-copy">
+          © 2026 AdopenAPI. Built with ❤️ for the AdonisJS ecosystem.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const nav = document.getElementById("nav");
+      window.addEventListener(
+        "scroll",
+        () => nav.classList.toggle("scrolled", window.scrollY > 40),
+        { passive: true }
+      );
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              observer.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+      );
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => observer.observe(el));
+
+      document.addEventListener("DOMContentLoaded", () => {
+        document
+          .querySelectorAll(".hero .reveal")
+          .forEach((el) => el.classList.add("visible"));
+      });
+
+      document.querySelectorAll(".faq-question").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const item = btn.closest(".faq-item");
+          const isOpen = item.classList.contains("open");
+          document
+            .querySelectorAll(".faq-item.open")
+            .forEach((i) => i.classList.remove("open"));
+          if (!isOpen) item.classList.add("open");
+          btn.setAttribute("aria-expanded", !isOpen);
+        });
+      });
+
+      document.querySelectorAll('a[href^="#"]').forEach((a) => {
+        a.addEventListener("click", (e) => {
+          const target = document.querySelector(a.getAttribute("href"));
+          if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
