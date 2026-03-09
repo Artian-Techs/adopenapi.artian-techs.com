@@ -1,0 +1,186 @@
+/* ─── RESET ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── DESIGN TOKENS ─── */
+:root {
+  --bg: #06080f;
+  --bg-2: #090c16;
+  --bg-3: #0e1525;
+  --surface: #111827;
+  --surface-2: #1a2236;
+  --border: rgba(99, 120, 180, 0.12);
+  --border-2: rgba(99, 120, 180, 0.22);
+  --primary: #5b6ef5;
+  --primary-2: #818cf8;
+  --glow: rgba(91, 110, 245, 0.35);
+  --cyan: #22d3ee;
+  --cyan-dim: rgba(34, 211, 238, 0.15);
+  --green: #34d399;
+  --green-dim: rgba(52, 211, 153, 0.15);
+  --orange: #fbbf24;
+  --red: #f87171;
+  --text: #eef2ff;
+  --text-2: #94a3b8;
+  --text-3: #4a5568;
+  --ff-head: "Bricolage Grotesque", sans-serif;
+  --ff-display: "Fraunces", serif;
+  --ff-body: "DM Sans", sans-serif;
+  --ff-mono: "JetBrains Mono", monospace;
+}
+
+/* ─── BASE ─── */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden; /* prevent horizontal scroll on iOS Safari */
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ff-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+/* ─── NOISE TEXTURE ─── */
+/* z-index: 2 keeps it above background orbs (z-index: 0) but well below
+   interactive elements like nav (z-index: 100) and header (z-index: 100).
+   Using 999 caused iOS Safari touch-event bugs on hamburger menus. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.5;
+}
+
+/* ─── BACKGROUND ORBS (inner pages) ─── */
+.bg-orb {
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(110px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+  animation: orb-in 1.2s ease forwards;
+}
+.bg-orb-1 {
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(91, 110, 245, 0.22) 0%, transparent 70%);
+  top: -250px;
+  left: -200px;
+  animation-delay: 0s;
+}
+.bg-orb-2 {
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(34, 211, 238, 0.1) 0%, transparent 70%);
+  bottom: -100px;
+  right: -100px;
+  animation-delay: 0.2s;
+}
+@keyframes orb-in {
+  to { opacity: 1; }
+}
+
+/* ─── BRAND ICON ─── */
+.brand-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--cyan) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 0 14px var(--glow);
+  flex-shrink: 0;
+}
+
+/* ─── BRAND LINK ─── */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--ff-head);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text);
+  text-decoration: none;
+  letter-spacing: -0.02em;
+}
+
+/* ─── HEADER (inner pages) ─── */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--border);
+  background: rgba(6, 8, 15, 0.8);
+  backdrop-filter: blur(16px);
+}
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ─── BACK LINK ─── */
+.back-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-3);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-family: var(--ff-body);
+}
+.back-link:hover {
+  color: var(--text-2);
+}
+
+/* ─── CODE SYNTAX ─── */
+.kw { color: #c084fc; }
+.fn { color: #60a5fa; }
+.cl { color: #34d399; }
+.st { color: #fca5a5; }
+.cm { color: #4a5568; }
+.nm { color: #fbbf24; }
+.pu { color: var(--text); }
+.op { color: var(--text-2); }
+
+/* ─── RESPONSIVE: mobile header ─── */
+@media (max-width: 600px) {
+  .header-inner {
+    padding: 0 16px;
+    height: 56px;
+  }
+  .brand {
+    font-size: 15px;
+  }
+}

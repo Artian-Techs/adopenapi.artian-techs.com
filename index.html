@@ -24,65 +24,11 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Fraunces:ital,opsz,wght@0,9..144,100;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <link
+      rel="stylesheet"
+      href="styles.css"
+    />
     <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
-      :root {
-        --bg: #06080f;
-        --bg-2: #090c16;
-        --bg-3: #0e1525;
-        --surface: #111827;
-        --surface-2: #1a2236;
-        --border: rgba(99, 120, 180, 0.12);
-        --border-2: rgba(99, 120, 180, 0.22);
-        --primary: #5b6ef5;
-        --primary-2: #818cf8;
-        --glow: rgba(91, 110, 245, 0.35);
-        --cyan: #22d3ee;
-        --cyan-dim: rgba(34, 211, 238, 0.15);
-        --green: #34d399;
-        --orange: #fbbf24;
-        --red: #f87171;
-        --text: #eef2ff;
-        --text-2: #94a3b8;
-        --text-3: #4a5568;
-        --ff-head: "Bricolage Grotesque", sans-serif;
-        --ff-display: "Fraunces", serif;
-        --ff-body: "DM Sans", sans-serif;
-        --ff-mono: "JetBrains Mono", monospace;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--ff-body);
-        font-size: 16px;
-        line-height: 1.6;
-        overflow-x: hidden;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: var(--bg);
-      }
-      ::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 3px;
-      }
-
       .container {
         max-width: 1120px;
         margin: 0 auto;
@@ -149,16 +95,6 @@
       }
       .reveal-delay-5 {
         transition-delay: 0.5s;
-      }
-
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-        pointer-events: none;
-        z-index: 999;
-        opacity: 0.5;
       }
 
       /* ═══ NAV ═══ */
@@ -450,30 +386,6 @@
         line-height: 1.75;
         text-align: left;
         overflow-x: auto;
-      }
-      .kw {
-        color: #c084fc;
-      }
-      .fn {
-        color: #60a5fa;
-      }
-      .cl {
-        color: #34d399;
-      }
-      .st {
-        color: #fca5a5;
-      }
-      .cm {
-        color: #4a5568;
-      }
-      .nm {
-        color: #fbbf24;
-      }
-      .op {
-        color: var(--text-2);
-      }
-      .pu {
-        color: var(--text);
       }
       .ty {
         color: #818cf8;
@@ -1275,13 +1187,164 @@
         font-family: var(--ff-mono);
       }
 
-      @media (max-width: 768px) {
-        .nav-links {
+      /* ═══ HAMBURGER ═══ */
+      .nav-hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        gap: 5px;
+        width: 36px;
+        height: 36px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 6px;
+        transition: background 0.2s;
+      }
+      .nav-hamburger:hover {
+        background: var(--surface);
+      }
+      .nav-hamburger span {
+        display: block;
+        width: 100%;
+        height: 2px;
+        background: var(--text-2);
+        border-radius: 2px;
+        transition:
+          transform 0.3s ease,
+          opacity 0.3s ease;
+      }
+      .nav-hamburger[aria-expanded="true"] span:nth-child(1) {
+        transform: translateY(7px) rotate(45deg);
+      }
+      .nav-hamburger[aria-expanded="true"] span:nth-child(2) {
+        opacity: 0;
+      }
+      .nav-hamburger[aria-expanded="true"] span:nth-child(3) {
+        transform: translateY(-7px) rotate(-45deg);
+      }
+
+      @media (max-width: 900px) {
+        /* ── NAV ── */
+        .nav-hamburger {
+          display: flex;
+        }
+        /* Hide the nav CTA on mobile — hamburger menu has the links */
+        .nav-inner > .btn-primary {
           display: none;
         }
+        .nav-links {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          background: rgba(6, 8, 15, 0.97);
+          backdrop-filter: blur(20px);
+          border-bottom: 1px solid var(--border);
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0;
+          padding: 8px 0 16px;
+          list-style: none;
+          z-index: 99;
+        }
+        .nav-links.open {
+          display: flex;
+        }
+        .nav-links li a {
+          display: block;
+          padding: 14px 24px;
+          font-size: 15px;
+          color: var(--text-2);
+          text-decoration: none;
+          transition:
+            color 0.2s,
+            background 0.2s;
+        }
+        .nav-links li a:hover {
+          color: var(--text);
+          background: rgba(99, 120, 180, 0.06);
+        }
+        /* CTA inside the mobile menu */
+        .nav-links .nav-cta-mobile {
+          margin: 8px 16px 0;
+        }
+        .nav-links .nav-cta-mobile a {
+          display: block;
+          padding: 14px 24px;
+          background: var(--primary);
+          border-radius: 8px;
+          color: #fff;
+          font-weight: 600;
+          text-align: center;
+        }
+        .nav-links .nav-cta-mobile a:hover {
+          background: var(--primary-2);
+        }
+
+        /* ── HERO ── */
+        .hero {
+          padding-top: 100px;
+          padding-bottom: 60px;
+        }
+        .hero-cta {
+          flex-direction: column;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 40px;
+        }
+        .btn-xl {
+          width: 100%;
+          max-width: 320px;
+          justify-content: center;
+          padding: 16px 28px;
+          font-size: 15px;
+        }
+
+        /* ── CODE PREVIEW (hero) ── */
+        .hero-code-preview {
+          margin: 0;
+          border-radius: 12px;
+          max-width: 100%;
+        }
+        .code-body {
+          padding: 16px 18px;
+          font-size: 12px;
+          line-height: 1.7;
+          overflow-x: auto;
+        }
+        /* Prevent pre from expanding wider than its scroll container */
+        .code-body pre,
+        .comp-body pre,
+        .step-code pre {
+          max-width: 100%;
+          white-space: pre;
+          overflow-x: auto;
+        }
+
+        /* ── STATS STRIP ── */
+        .strip-inner {
+          flex-wrap: wrap;
+          gap: 20px 32px;
+          justify-content: center;
+        }
+        .strip-sep {
+          display: none;
+        }
+
+        /* ── COMPARISON ── */
         .comparison-grid {
           grid-template-columns: 1fr;
         }
+        .comp-body {
+          min-height: auto;
+          font-size: 11.5px;
+          padding: 16px;
+        }
+
+        /* ── HOW IT WORKS ── */
         .steps::before {
           display: none;
         }
@@ -1294,14 +1357,89 @@
           height: 48px;
           font-size: 16px;
         }
+        .step-code {
+          font-size: 11.5px;
+          padding: 12px 14px;
+        }
+
+        /* ── PRICING ── */
         .pricing-card {
           padding: 36px 28px;
         }
         .price-amount {
           font-size: 72px;
         }
+
+        /* ── GENERAL ── */
         section {
           padding: 72px 0;
+        }
+        .section-header {
+          margin-bottom: 48px;
+        }
+        .footer-inner {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 16px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 0 16px;
+        }
+
+        /* Hero code preview: full bleed on very small screens */
+        .hero-code-preview {
+          margin: 0 -16px;
+          border-radius: 0;
+          border-left: none;
+          border-right: none;
+        }
+        .code-body {
+          font-size: 11px;
+          padding: 14px 16px;
+        }
+
+        /* Comparison panels */
+        .comp-body {
+          font-size: 11px;
+          padding: 14px;
+        }
+
+        /* Pricing */
+        .pricing-card {
+          padding: 28px 20px;
+        }
+        .price-amount {
+          font-size: 64px;
+        }
+        .pricing-title {
+          font-size: 20px;
+        }
+
+        /* Sections */
+        section {
+          padding: 56px 0;
+        }
+        .section-header {
+          margin-bottom: 36px;
+        }
+        .section-sub {
+          font-size: 15px;
+        }
+
+        /* Features */
+        .feature-card {
+          padding: 24px 20px;
+        }
+
+        /* Steps */
+        .step {
+          padding: 28px 0;
+        }
+        .step-code {
+          font-size: 11px;
         }
       }
     </style>
@@ -1317,13 +1455,29 @@
           <span class="logo-icon">A↗</span>
           AdopenAPI
         </a>
-        <ul class="nav-links">
+        <ul
+          class="nav-links"
+          id="navLinks"
+        >
           <li><a href="#features">Features</a></li>
           <li><a href="#how-it-works">How it works</a></li>
           <li><a href="#support">Support</a></li>
           <li><a href="#pricing">Pricing</a></li>
           <li><a href="#faq">FAQ</a></li>
+          <li class="nav-cta-mobile">
+            <a href="payment.html">Get AdopenAPI — 99€</a>
+          </li>
         </ul>
+        <button
+          class="nav-hamburger"
+          id="navHamburger"
+          aria-label="Menu"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
         <a
           href="payment.html"
           class="btn btn-primary"
@@ -2373,16 +2527,7 @@
           btn.setAttribute("aria-expanded", !isOpen);
         });
       });
-
-      document.querySelectorAll('a[href^="#"]').forEach((a) => {
-        a.addEventListener("click", (e) => {
-          const target = document.querySelector(a.getAttribute("href"));
-          if (target) {
-            e.preventDefault();
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        });
-      });
     </script>
+    <script src="./main.js"></script>
   </body>
 </html>

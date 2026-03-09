@@ -24,166 +24,18 @@
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Fraunces:opsz,wght@9..144,700;9..144,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="styles.css" />
     <!--
     Paddle.js v2 — handles the inline/overlay checkout.
     Initialize with your client-side token; no secret keys are ever exposed.
   -->
     <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
     <style>
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-
       :root {
-        --bg: #06080f;
-        --bg-2: #090c16;
-        --bg-3: #0e1525;
-        --surface: #111827;
-        --border: rgba(99, 120, 180, 0.12);
-        --border-2: rgba(99, 120, 180, 0.22);
-        --primary: #5b6ef5;
-        --primary-2: #818cf8;
-        --glow: rgba(91, 110, 245, 0.35);
-        --cyan: #22d3ee;
-        --green: #34d399;
-        --orange: #fbbf24;
         --paddle: #0052cc;
         --paddle-2: #2684ff;
-        --text: #eef2ff;
-        --text-2: #94a3b8;
-        --text-3: #4a5568;
-        --ff-head: "Bricolage Grotesque", sans-serif;
-        --ff-display: "Fraunces", serif;
-        --ff-body: "DM Sans", sans-serif;
-        --ff-mono: "JetBrains Mono", monospace;
       }
 
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--ff-body);
-        font-size: 16px;
-        line-height: 1.6;
-        overflow-x: hidden;
-        -webkit-font-smoothing: antialiased;
-        min-height: 100vh;
-      }
-
-      ::-webkit-scrollbar {
-        width: 6px;
-      }
-      ::-webkit-scrollbar-track {
-        background: var(--bg);
-      }
-      ::-webkit-scrollbar-thumb {
-        background: var(--primary);
-        border-radius: 3px;
-      }
-
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-        pointer-events: none;
-        z-index: 0;
-        opacity: 0.5;
-      }
-
-      /* ─── BACKGROUND ORBS ─── */
-      .bg-orb {
-        position: fixed;
-        border-radius: 50%;
-        filter: blur(110px);
-        pointer-events: none;
-        z-index: 0;
-        opacity: 0;
-        animation: orb-in 1.2s ease forwards;
-      }
-      .bg-orb-1 {
-        width: 700px;
-        height: 700px;
-        background: radial-gradient(
-          circle,
-          rgba(91, 110, 245, 0.22) 0%,
-          transparent 70%
-        );
-        top: -250px;
-        left: -200px;
-        animation-delay: 0s;
-      }
-      .bg-orb-2 {
-        width: 500px;
-        height: 500px;
-        background: radial-gradient(
-          circle,
-          rgba(34, 211, 238, 0.1) 0%,
-          transparent 70%
-        );
-        bottom: -100px;
-        right: -100px;
-        animation-delay: 0.2s;
-      }
-      @keyframes orb-in {
-        to {
-          opacity: 1;
-        }
-      }
-
-      /* ─── HEADER ─── */
-      header {
-        position: relative;
-        z-index: 10;
-        border-bottom: 1px solid var(--border);
-        background: rgba(6, 8, 15, 0.7);
-        backdrop-filter: blur(16px);
-      }
-      .header-inner {
-        max-width: 1140px;
-        margin: 0 auto;
-        padding: 0 32px;
-        height: 64px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-family: var(--ff-head);
-        font-weight: 700;
-        font-size: 17px;
-        color: var(--text);
-        text-decoration: none;
-        letter-spacing: -0.02em;
-      }
-      .brand-icon {
-        width: 30px;
-        height: 30px;
-        border-radius: 7px;
-        background: linear-gradient(
-          135deg,
-          var(--primary) 0%,
-          var(--cyan) 100%
-        );
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: var(--ff-mono);
-        font-size: 12px;
-        font-weight: 600;
-        color: #fff;
-        box-shadow: 0 0 14px var(--glow);
-      }
       .header-right {
         display: flex;
         align-items: center;
@@ -201,19 +53,6 @@
       .secure-label svg {
         color: var(--green);
       }
-      .back-link {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        color: var(--text-3);
-        text-decoration: none;
-        transition: color 0.2s;
-      }
-      .back-link:hover {
-        color: var(--text-2);
-      }
-
       /* ─── MAIN LAYOUT ─── */
       .checkout-wrap {
         position: relative;
@@ -359,28 +198,6 @@
         line-height: 1.8;
         overflow-x: auto;
       }
-      .kw {
-        color: #c084fc;
-      }
-      .fn {
-        color: #60a5fa;
-      }
-      .cl {
-        color: #34d399;
-      }
-      .st {
-        color: #fca5a5;
-      }
-      .cm {
-        color: #4a5568;
-      }
-      .pu {
-        color: var(--text);
-      }
-      .op {
-        color: var(--text-2);
-      }
-
       /* ══════════════════════════
        RIGHT — PRICE CARD
     ══════════════════════════ */
@@ -647,11 +464,56 @@
         .faq-strip {
           grid-template-columns: 1fr;
         }
-        .header-inner {
-          padding: 0 20px;
-        }
         .secure-label {
           display: none;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .checkout-wrap {
+          padding: 24px 16px 56px;
+        }
+        .pc-amount {
+          font-size: 60px;
+        }
+        .pd-title {
+          font-size: 22px;
+        }
+        .pd-sub {
+          font-size: 14px;
+        }
+        .price-card {
+          padding: 28px 20px;
+        }
+        /* Code strip */
+        .code-strip-body {
+          padding: 14px 14px;
+          font-size: 11px;
+        }
+        .code-strip-title {
+          display: none;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .faq-strip {
+          gap: 0;
+        }
+        .pc-amount {
+          font-size: 52px;
+        }
+        .pc-currency {
+          font-size: 22px;
+          margin-top: 10px;
+        }
+        .inc-item {
+          gap: 10px;
+        }
+        .inc-text strong {
+          font-size: 13px;
+        }
+        .inc-text span {
+          font-size: 12px;
         }
       }
     </style>
@@ -1120,5 +982,6 @@
           });
         });
     </script>
+    <script src="main.js"></script>
   </body>
 </html>
