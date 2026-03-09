@@ -25,14 +25,10 @@
       rel="stylesheet"
     />
     <!--
-    LemonSqueezy overlay checkout script.
-    This opens the checkout in a beautiful overlay modal without leaving your page.
-    The user is redirected to success.html after purchase.
+    Paddle.js v2 — handles the inline/overlay checkout.
+    Initialize with your client-side token; no secret keys are ever exposed.
   -->
-    <script
-      src="https://app.lemonsqueezy.com/js/lemon.js"
-      defer
-    ></script>
+    <script src="https://cdn.paddle.com/paddle/v2/paddle.js"></script>
     <style>
       *,
       *::before,
@@ -55,6 +51,8 @@
         --cyan: #22d3ee;
         --green: #34d399;
         --orange: #fbbf24;
+        --paddle: #0052cc;
+        --paddle-2: #2684ff;
         --text: #eef2ff;
         --text-2: #94a3b8;
         --text-3: #4a5568;
@@ -505,8 +503,8 @@
         color: var(--green);
       }
 
-      /* CTA Button — LemonSqueezy overlay trigger */
-      .ls-btn {
+      /* CTA Button — Paddle overlay trigger */
+      .paddle-btn {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -519,7 +517,6 @@
         font-weight: 700;
         letter-spacing: -0.01em;
         color: #fff;
-        text-decoration: none;
         background: linear-gradient(
           135deg,
           var(--primary) 0%,
@@ -533,7 +530,7 @@
         position: relative;
         overflow: hidden;
       }
-      .ls-btn::after {
+      .paddle-btn::after {
         content: "";
         position: absolute;
         inset: 0;
@@ -545,11 +542,11 @@
         );
         transform: translateX(-100%);
       }
-      .ls-btn:hover {
+      .paddle-btn:hover {
         transform: translateY(-2px);
         box-shadow: 0 16px 48px rgba(91, 110, 245, 0.5);
       }
-      .ls-btn:hover::after {
+      .paddle-btn:hover::after {
         animation: shimmer 0.6s ease forwards;
       }
       @keyframes shimmer {
@@ -558,8 +555,8 @@
         }
       }
 
-      /* LemonSqueezy branding note */
-      .ls-note {
+      /* Paddle branding note */
+      .paddle-note {
         margin-top: 14px;
         text-align: center;
         font-size: 12px;
@@ -571,15 +568,15 @@
         gap: 6px;
       }
 
-      /* LemonSqueezy logo (text-based) */
-      .ls-logo {
+      /* Paddle logo (text-based) */
+      .paddle-logo {
         display: inline-flex;
         align-items: center;
         gap: 4px;
         font-weight: 600;
-        color: #efd500;
+        color: var(--paddle-2);
       }
-      .ls-logo svg {
+      .paddle-logo svg {
         width: 14px;
         height: 14px;
       }
@@ -695,7 +692,7 @@
               />
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
-            Payments by LemonSqueezy
+            Payments by Paddle
           </div>
           <a
             href="index.html"
@@ -854,8 +851,8 @@
           <div class="faq-mini">
             <div class="faq-mini-q">Is there a refund policy?</div>
             <div class="faq-mini-a">
-              14-day money-back guarantee, no questions asked. LemonSqueezy
-              handles refunds instantly.
+              14-day money-back guarantee, no questions asked. Paddle handles
+              refunds instantly through their buyer portal.
             </div>
           </div>
           <div class="faq-mini">
@@ -905,27 +902,25 @@
 
           <!--
         ════════════════════════════════════════
-        LEMONSQUEEZY CHECKOUT BUTTON
+        PADDLE CHECKOUT BUTTON
         ════════════════════════════════════════
 
-        Replace the href with your actual LemonSqueezy checkout URL:
+        Replace the placeholders in the <script> below:
 
-          https://YOUR-STORE.lemonsqueezy.com/checkout/buy/YOUR-VARIANT-ID
-            ?checkout[redirect_url]=https://yourdomain.com/success.html
+          YOUR_PADDLE_CLIENT_TOKEN
+            → Dashboard → Developer Tools → Authentication → Client-side token
+            → Sandbox tokens start with "test_", live tokens with "live_"
 
-        The class "lemonsqueezy-button" makes it open as an overlay modal.
+          YOUR_PADDLE_PRICE_ID
+            → Dashboard → Catalog → Prices → your price ID (pri_xxx)
 
-        To get your checkout URL:
-          1. Log in to app.lemonsqueezy.com
-          2. Products → your product → Share
-          3. Copy the checkout link
-          4. Append ?checkout[redirect_url]=YOUR_SUCCESS_URL
-
-        LemonSqueezy will append ?order_id=xxx to your redirect URL.
+        Paddle v2 opens a fully-hosted overlay checkout — no redirect needed.
+        VAT / tax is calculated and collected by Paddle (Merchant of Record).
       -->
-          <a
-            href="https://YOUR-STORE.lemonsqueezy.com/checkout/buy/YOUR-VARIANT-ID?checkout[redirect_url]=https://yourdomain.com/success.html"
-            class="ls-btn lemonsqueezy-button"
+          <button
+            type="button"
+            class="paddle-btn"
+            id="paddle-btn"
           >
             <svg
               width="17"
@@ -940,9 +935,9 @@
               <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
             </svg>
             Get AdopenAPI — €99
-          </a>
+          </button>
 
-          <p class="ls-note">
+          <p class="paddle-note">
             <svg
               width="12"
               height="12"
@@ -964,18 +959,18 @@
               <path d="M7 11V7a5 5 0 0 1 10 0v4" />
             </svg>
             Powered by
-            <span class="ls-logo">
-              <!-- LemonSqueezy lemon icon (simplified) -->
+            <span class="paddle-logo">
+              <!-- Paddle "P" paddle icon (simplified) -->
               <svg
                 viewBox="0 0 24 24"
                 fill="currentColor"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M12 2C8.5 2 5.5 4.5 5 8c-.5 3 1 6 3.5 8 1 .8 2 1.5 3.5 1.5s2.5-.7 3.5-1.5C18 14 19.5 11 19 8c-.5-3.5-3.5-6-7-6z"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4-4h-2V8h2v4z"
                 />
               </svg>
-              LemonSqueezy
+              Paddle
             </span>
             — VAT &amp; taxes handled automatically
           </p>
@@ -995,9 +990,8 @@
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
               </svg>
               <span
-                ><strong>Merchant of Record.</strong> LemonSqueezy handles
-                global VAT, sales tax, and compliance — you pay nothing
-                extra.</span
+                ><strong>Merchant of Record.</strong> Paddle handles global VAT,
+                sales tax, and compliance — you pay nothing extra.</span
               >
             </div>
             <div class="trust-row">
@@ -1074,13 +1068,57 @@
                 />
               </svg>
               <span
-                ><strong>Cards, PayPal, and more.</strong> All major payment
-                methods accepted.</span
+                ><strong>Cards, PayPal, Apple Pay, Google Pay accepted.</strong>
+                All major payment methods supported globally.</span
               >
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      // ─────────────────────────────────────────────────────────
+      //  PADDLE v2 CONFIGURATION
+      //
+      //  1. Replace YOUR_PADDLE_CLIENT_TOKEN with your client-side
+      //     token from: Dashboard → Developer Tools → Authentication
+      //     Sandbox tokens start with "test_"
+      //     Live tokens start with "live_"
+      //
+      //  2. Replace YOUR_PADDLE_PRICE_ID with the price ID (pri_xxx)
+      //     from: Dashboard → Catalog → Prices
+      //
+      //  3. (Optional) For sandbox testing, add:
+      //     Paddle.Environment.set("sandbox")
+      //     before Paddle.Initialize(...)
+      // ─────────────────────────────────────────────────────────
+
+      // Uncomment the line below when using sandbox / test mode:
+      // Paddle.Environment.set("sandbox");
+
+      Paddle.Initialize({
+        token: "YOUR_PADDLE_CLIENT_TOKEN"
+      });
+
+      document
+        .getElementById("paddle-btn")
+        .addEventListener("click", function () {
+          Paddle.Checkout.open({
+            items: [
+              {
+                priceId: "YOUR_PADDLE_PRICE_ID",
+                quantity: 1
+              }
+            ],
+            settings: {
+              successUrl: "success.html",
+              displayMode: "overlay",
+              theme: "dark",
+              locale: "en"
+            }
+          });
+        });
+    </script>
   </body>
 </html>
